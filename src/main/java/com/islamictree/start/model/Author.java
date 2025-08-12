@@ -15,7 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name="authors")
-public class Author extends BaseEntity {
+public class Author extends Person {
 
     @OneToOne
     private User user;

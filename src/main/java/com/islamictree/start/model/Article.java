@@ -31,12 +31,7 @@ public class Article extends BaseEntity {
     )
     private Set<Author> authors = new HashSet<>();
 
-    @CreationTimestamp
-    private Timestamp createdAt;
-
-    @UpdateTimestamp
-    private Timestamp updatedAt;
-
+    @Lob
     @Column(name = "blurb")
     private String blurb;
 
@@ -52,4 +47,9 @@ public class Article extends BaseEntity {
     )
     private Set<Tag> tags = new HashSet<>();
 
+    @CreationTimestamp
+    private Timestamp createdAt;
+
+    @UpdateTimestamp
+    private Timestamp updatedAt;
 }

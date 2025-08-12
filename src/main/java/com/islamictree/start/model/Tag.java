@@ -19,6 +19,8 @@ import java.util.Set;
 @Table(name="tags")
 public class Tag extends BaseEntity {
 
+    private String name;
+
     @ManyToMany(mappedBy = "tags")
     private Set<Article> articles;
 

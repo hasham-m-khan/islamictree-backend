@@ -1,19 +1,19 @@
 package com.islamictree.start.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="addresses")
+@Table(name="address")
 public class Address extends BaseEntity {
 
     @Column(name = "streetName")
@@ -33,4 +33,7 @@ public class Address extends BaseEntity {
 
     @Column(name = "Latitude")
     private Double latitude;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "address")
+    private Set<User> users;
 }
