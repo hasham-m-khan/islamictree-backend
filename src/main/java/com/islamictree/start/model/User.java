@@ -1,9 +1,6 @@
 package com.islamictree.start.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,13 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name="users")
-public class User extends BaseEntity {
-
-    @Column(name = "firstName")
-    private String firstName;
-
-    @Column(name = "lastName")
-    private String lastName;
+public class User extends Person {
 
     @Column(name = "telephone")
     private String phone;
