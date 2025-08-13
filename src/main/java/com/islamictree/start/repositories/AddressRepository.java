@@ -1,0 +1,9 @@
+package com.islamictree.start.repositories;
+
+import com.islamictree.start.model.Address;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface AddressRepository extends R2dbcRepository<Address, Long> {
+}

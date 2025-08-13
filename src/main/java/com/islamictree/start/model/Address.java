@@ -1,10 +1,11 @@
 package com.islamictree.start.model;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.Set;
 
@@ -12,28 +13,36 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Table(name="address")
 public class Address extends BaseEntity {
 
-    @Column(name = "streetName")
+    @Column("street_name")
     private String streetName;
 
-    @Column(name = "city")
+    @Column("city")
     private String city;
 
-    @Column(name = "state")
+    @Column("state")
     private String state;
 
-    @Column(name = "zipCode")
+    @Column("zip_code")
     private String zipCode;
 
-    @Column(name = "longitude")
+    @Column("longitude")
     private Double longitude;
 
-    @Column(name = "Latitude")
+    @Column("latitude")
     private Double latitude;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "address")
-    private Set<User> users;
+    public Address(Long id, String streetName, String city,
+                   String state, String zipCode, Double longitude,
+                   Double latitude) {
+        super(id);
+        this.streetName = streetName;
+        this.city = city;
+        this.state = state;
+        this.zipCode = zipCode;
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
 }

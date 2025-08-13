@@ -1,55 +1,42 @@
 package com.islamictree.start.model;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Table(name="articles")
 public class Article extends BaseEntity {
 
-    @Column(name = "title")
     private String title;
 
-    @ManyToMany
-    @JoinTable(
-            name = "articles_authors",
-            joinColumns = @JoinColumn(name = "articleId"),
-            inverseJoinColumns = @JoinColumn(name = "authorId")
-    )
-    private Set<Author> authors = new HashSet<>();
-
-    @Lob
-    @Column(name = "blurb")
+    @Column("blurb")
     private String blurb;
 
-    @Lob
-    @Column(name = "article")
+    @Column("article")
     private String article;
 
-    @ManyToMany
-    @JoinTable(
-        name = "article_tag",
-        joinColumns = @JoinColumn(name = "article_id"),
-        inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private Set<Tag> tags = new HashSet<>();
+    @Column("image_data")
+    private byte[] imageData;
 
-    @CreationTimestamp
+    @Column("content_type")
+    private String contentType;
+
+    @CreatedDate
+    @Column("created_at")
     private Timestamp createdAt;
 
-    @UpdateTimestamp
+    @LastModifiedDate
+    @Column("last_updated")
     private Timestamp updatedAt;
 }

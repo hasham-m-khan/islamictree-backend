@@ -1,27 +1,41 @@
 package com.islamictree.start.model;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper=true)
 @NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name="authors")
+@Table(name = "authors")
 public class Author extends Person {
 
-    @OneToOne
-    private User user;
-
+    @Column("description")
     private String description;
 
-    @ManyToMany(mappedBy = "authors")
-    private Set<Article> articles = new HashSet<>();
+    @Column("image_data")
+    private byte[] imageData;
+
+    @Column("content_type")
+    private String contentType;
+
+    public Author(String firstName, String lastName, String description,
+                  String contentType, byte[] imageData) {
+        super(firstName, lastName);
+        this.description = description;
+        this.contentType = contentType;
+        this.imageData = imageData;
+    }
+
+    public Author(Long id, String firstName, String lastName, String description,
+                  String contentType, byte[] imageData) {
+        super(id, firstName, lastName);
+        this.description = description;
+        this.contentType = contentType;
+        this.imageData = imageData;
+    }
 }

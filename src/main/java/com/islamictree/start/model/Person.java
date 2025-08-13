@@ -1,22 +1,26 @@
 package com.islamictree.start.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.relational.core.mapping.Column;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@MappedSuperclass
 public class Person extends BaseEntity {
 
-    @Column(name = "firstName")
+    @Column("first_name")
     private String firstName;
 
-    @Column(name = "lastName")
+    @Column("last_name")
     private String lastName;
+
+    public Person(Long id, String firstName, String lastName) {
+        super(id);
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }
