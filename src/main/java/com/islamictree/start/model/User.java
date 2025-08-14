@@ -1,6 +1,5 @@
 package com.islamictree.start.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +12,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table(name="users")
 public class User extends Person {
 
-    @Column("phone")
+    @Column("telephone")
     private String phone;
 
     @Column("address_id")
