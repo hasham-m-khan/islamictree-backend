@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS users (
     address_id BIGINT,
     PRIMARY KEY (id),
     FOREIGN KEY (address_id) REFERENCES address(id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
 );
 
 -- AUTHORS TABLE
