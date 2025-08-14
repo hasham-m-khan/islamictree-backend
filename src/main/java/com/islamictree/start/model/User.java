@@ -6,6 +6,8 @@ import lombok.Setter;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,5 +30,22 @@ public class User extends Person {
         super(id, firstName, lastName);
         this.phone = phone;
         this.addressId = addressId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        User user = (User) o;
+        return Objects.equals(phone, user.phone) && Objects.equals(addressId, user.addressId);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + Objects.hashCode(phone);
+        result = 31 * result + Objects.hashCode(addressId);
+        return result;
     }
 }
