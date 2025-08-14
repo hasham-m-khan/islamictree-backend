@@ -24,7 +24,6 @@ public class R2dbcConfiguration extends AbstractR2dbcConfiguration {
     @Override
     @Bean
     public ConnectionFactory connectionFactory() {
-        System.out.println("=================>" + username);
         ConnectionFactoryOptions options = ConnectionFactoryOptions.builder()
                 .option(DRIVER, "mysql")
                 .option(HOST, "localhost")
@@ -35,14 +34,5 @@ public class R2dbcConfiguration extends AbstractR2dbcConfiguration {
                 .build();
 
         return ConnectionFactories.get(options);
-    }
-
-    @Bean
-    public ConnectionFactoryInitializer initializer(ConnectionFactory connectionFactory) {
-        ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
-        initializer.setConnectionFactory(connectionFactory);
-        initializer.setDatabasePopulator(new ResourceDatabasePopulator(new ClassPathResource("sql/schema.sql")));
-
-        return initializer;
     }
 }
