@@ -1,18 +1,25 @@
-INSERT IGNORE INTO address (id, street_name, city, state, zip_code, longitude, latitude)
-    VALUES (1, '112th ST', 'Manhattan', 'New York', '11421', 92.5, 99.2);
-INSERT IGNORE INTO address (id, street_name, city, state, zip_code, longitude, latitude)
-    VALUES (2, '85th ST Jamaica Avenue', 'Queens', 'New York', '11432', 92.5, 99.2);
-INSERT IGNORE INTO address (id, street_name, city, state, zip_code, longitude, latitude)
-    VALUES (3, '2025 Meadow DR', 'Richardson', 'Texas', '75243', 90.25, 20.35);
+INSERT IGNORE INTO addresses (id, street, city, state, country, zip_code)
+    VALUES (1, '112th ST', 'Manhattan', 'New York', 'USA', '11421');
+INSERT IGNORE INTO addresses (id, street, city, state, country, zip_code)
+    VALUES (2, '85th ST Jamaica Avenue', 'Queens', 'New York', 'USA', '11432');
+INSERT IGNORE INTO addresses (id, street, city, state, country, zip_code)
+    VALUES (3, '2025 Meadow DR', 'Richardson', 'Texas', 'USA', '75243');
 
-INSERT IGNORE INTO users (id, first_name, last_name, telephone, address_id) VALUES (1, 'Robert', 'Kiyosaki', '123-456-7890', 1);
-INSERT IGNORE INTO users (id, first_name, last_name, telephone, address_id) VALUES (2, 'Frank', 'Herbert', '232-112-5641', 2);
-INSERT IGNORE INTO users (id, first_name, last_name, telephone, address_id) VALUES (3, 'Samantha', 'Kiyosaki', '123-456-6589', 1);
-INSERT IGNORE INTO users (id, first_name, last_name, telephone, address_id) VALUES (4, 'Jordon', 'DeVille', '441-256-7851', 3);
+INSERT IGNORE INTO users (id, first_name, last_name, telephone, address_id)
+       VALUES (1, 'Robert', 'Kiyosaki', '123-456-7890', 1);
+INSERT IGNORE INTO users (id, first_name, last_name, telephone, address_id)
+       VALUES (2, 'Frank', 'Herbert', '232-112-5641', 2);
+INSERT IGNORE INTO users (id, first_name, last_name, telephone, address_id)
+       VALUES (3, 'Samantha', 'Kiyosaki', '123-456-6589', 1);
+INSERT IGNORE INTO users (id, first_name, last_name, telephone, address_id)
+       VALUES (4, 'Jordon', 'DeVille', '441-256-7851', 3);
 
-INSERT IGNORE INTO authors (id, first_name, last_name, description) VALUES (1, 'Conan', 'Doyle', 'This is a test description');
-INSERT IGNORE INTO authors (id, first_name, last_name, description) VALUES (2, 'Charles', 'Dickens', 'Another test description');
-INSERT IGNORE INTO authors (id, first_name, last_name, description) VALUES (3, 'George', 'Orwell', 'Another NEW test description');
+INSERT IGNORE INTO authors (id, first_name, last_name, description)
+       VALUES (1, 'Conan', 'Doyle', 'This is a test description');
+INSERT IGNORE INTO authors (id, first_name, last_name, description)
+       VALUES (2, 'Charles', 'Dickens', 'Another test description');
+INSERT IGNORE INTO authors (id, first_name, last_name, description)
+       VALUES (3, 'George', 'Orwell', 'Another NEW test description');
 
 INSERT IGNORE INTO tags (id, name) VALUES (1, 'personal finance');
 INSERT IGNORE INTO tags (id, name) VALUES (2, 'science fiction');
@@ -40,15 +47,6 @@ INSERT IGNORE INTO article_tag (article_id, tag_id) VALUES (1, 1);
 INSERT IGNORE INTO article_tag (article_id, tag_id) VALUES (2, 2);
 INSERT IGNORE INTO article_tag (article_id, tag_id) VALUES (2, 3);
 
-INSERT IGNORE INTO author_article (article_id, author_id) VALUES(
-    1,
-    1
-);
-INSERT IGNORE INTO author_article (article_id, author_id) VALUES(
-    1,
-    3
-);
-INSERT IGNORE INTO author_article (article_id, author_id) VALUES(
-    2,
-    2
-);
+INSERT IGNORE INTO author_article (article_id, author_id) VALUES(1, 1);
+INSERT IGNORE INTO author_article (article_id, author_id) VALUES(1, 3);
+INSERT IGNORE INTO author_article (article_id, author_id) VALUES(2, 2);

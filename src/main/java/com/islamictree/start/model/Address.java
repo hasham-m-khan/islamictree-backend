@@ -1,5 +1,6 @@
 package com.islamictree.start.model;
 
+import com.islamictree.start.model.enums.AddressType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,17 +9,16 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="address")
+@Table(name="addresses")
 public class Address extends BaseEntity {
 
-    @Column("street_name")
-    private String streetName;
+    @Column("street")
+    private String street;
 
     @Column("city")
     private String city;
@@ -26,45 +26,79 @@ public class Address extends BaseEntity {
     @Column("state")
     private String state;
 
+    @Column("country")
+    private String country;
+
     @Column("zip_code")
     private String zipCode;
 
-    @Column("longitude")
+        @Column("longitude")
     private Double longitude;
 
     @Column("latitude")
     private Double latitude;
 
-    public Address(Long id, String streetName, String city,
-                   String state, String zipCode, Double longitude,
-                   Double latitude) {
+    @Column("is_validated")
+    private Boolean isValidated;
+
+    @Column("address_type")
+    private Enum<AddressType> addressType;
+
+
+    public Address(Long id, String street, String city, String state, String country,
+                   String zipCode, Double longitude, Double latitude, Boolean isValidated,
+                   Enum<AddressType> addressType) {
         super(id);
-        this.streetName = streetName;
+        this.street = street;
         this.city = city;
         this.state = state;
+        this.country = country;
         this.zipCode = zipCode;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.isValidated = isValidated;
+        this.addressType = addressType;
+    }
+
+    public Address(Long id, String street, String city, String state, String country,
+                   String zipCode) {
+        super(id);
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.zipCode = zipCode;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
         Address address = (Address) o;
-        return Objects.equals(streetName, address.streetName) &&
-                Objects.equals(city, address.city) &&
-                Objects.equals(state, address.state) &&
-                Objects.equals(zipCode, address.zipCode) &&
+        return street.equals(address.street) &&
+                city.equals(address.city) &&
+                state.equals(address.state) &&
+                zipCode.equals(address.zipCode) &&
+                country.equals(address.country) &&
                 Objects.equals(longitude, address.longitude) &&
-                Objects.equals(latitude, address.latitude);
+                Objects.equals(latitude, address.latitude) &&
+                Objects.equals(isValidated, address.isValidated) &&
+                Objects.equals(addressType, address.addressType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), streetName, city,
-                state, zipCode, longitude, latitude);
+        int result = super.hashCode();
+        result = 31 * result + street.hashCode();
+        result = 31 * result + city.hashCode();
+        result = 31 * result + state.hashCode();
+        result = 31 * result + zipCode.hashCode();
+        result = 31 * result + country.hashCode();
+        result = 31 * result + Objects.hashCode(longitude);
+        result = 31 * result + Objects.hashCode(latitude);
+        result = 31 * result + Objects.hashCode(isValidated);
+        result = 31 * result + Objects.hashCode(addressType);
+        return result;
     }
 }

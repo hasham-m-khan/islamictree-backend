@@ -1,16 +1,45 @@
--- ADDRESS TABLE
-CREATE TABLE IF NOT EXISTS address (
+-------------------
+-- ADDRESS TABLE --
+-------------------
+CREATE TABLE IF NOT EXISTS addresses (
     id BIGINT AUTO_INCREMENT,
-    street_name VARCHAR(255),
-    city VARCHAR(255),
-    state VARCHAR(255),
-    zip_code VARCHAR(255),
-    longitude NUMERIC(8, 2) SIGNED,
-    latitude NUMERIC(8, 2) SIGNED,
+    street VARCHAR(255) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    state VARCHAR(50) NOT NULL,
+    country VARCHAR(100) NOT NULL DEFAULT 'USA',
+    zip_code VARCHAR(20) NOT NULL,
+    latitude DECIMAL(10,8) SIGNED,
+    longitude DECIMAL (10, 8) SIGNED,
+    is_validated BOOLEAN DEFAULT FALSE,
+    address_type ENUM('RESIDENTIAL', 'BUSINESS', 'PO_BOX', 'OTHER') DEFAULT 'RESIDENTIAL',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
 );
 
---  USERS TABLE
+CREATE INDEX idx_addresses_city ON addresses (city);
+CREATE INDEX idx_addresses_state ON addresses (state);
+CREATE INDEX idx_addresses_zip_code ON addresses (zip_code);
+CREATE INDEX idx_addresses_validated ON addresses(is_validated);
+CREATE INDEX idx_addresses_type ON addresses(address_type);
+CREATE INDEX idx_addresses_city_state ON addresses (city, state);
+
+ALTER TABLE addresses
+    ADD CONSTRAINT chk_zip_code_format
+    CHECK (zip_code REGEXP '^[0-9]{5}(-[0-9]{4})?$');
+
+ALTER TABLE addresses
+    ADD CONSTRAINT chk_state_code_length
+    CHECK (LENGTH(state) <= 3);
+
+ALTER TABLE addresses
+    ADD CONSTRAINT chk_country_not_empty
+    CHECK (LENGTH(TRIM(country)) > 0);
+
+
+-------------------
+--  USERS TABLE  --
+-------------------
 CREATE TABLE IF NOT EXISTS users (
     id BIGINT AUTO_INCREMENT,
     first_name VARCHAR(255),
@@ -18,7 +47,7 @@ CREATE TABLE IF NOT EXISTS users (
     telephone VARCHAR(12),
     address_id BIGINT,
     PRIMARY KEY (id),
-    FOREIGN KEY (address_id) REFERENCES address(id)
+    FOREIGN KEY (address_id) REFERENCES addresses(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
