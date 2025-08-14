@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS articles (
 CREATE TABLE IF NOT EXISTS article_tag (
     article_id BIGINT,
     tag_id BIGINT,
+    PRIMARY KEY (article_id, tag_id),
     FOREIGN KEY (article_id) REFERENCES articles(id),
     FOREIGN KEY (tag_id) REFERENCES tags(id)
 );
@@ -69,6 +70,7 @@ CREATE TABLE IF NOT EXISTS article_tag (
 CREATE TABLE IF NOT EXISTS author_article (
     author_id BIGINT,
     article_id BIGINT,
+    PRIMARY KEY (author_id, article_id),
     FOREIGN KEY (author_id) REFERENCES authors(id),
     FOREIGN KEY (article_id) REFERENCES articles(id)
 );
