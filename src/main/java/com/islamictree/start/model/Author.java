@@ -1,12 +1,11 @@
 package com.islamictree.start.model;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.Objects;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
@@ -37,5 +36,23 @@ public class Author extends Person {
         this.description = description;
         this.contentType = contentType;
         this.imageData = imageData;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Author author = (Author) o;
+        return Objects.equals(description, author.description) && Arrays.equals(imageData, author.imageData) && Objects.equals(contentType, author.contentType);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + Objects.hashCode(description);
+        result = 31 * result + Arrays.hashCode(imageData);
+        result = 31 * result + Objects.hashCode(contentType);
+        return result;
     }
 }

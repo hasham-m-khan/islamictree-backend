@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -44,5 +45,26 @@ public class Address extends BaseEntity {
         this.zipCode = zipCode;
         this.longitude = longitude;
         this.latitude = latitude;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Address address = (Address) o;
+        return Objects.equals(streetName, address.streetName) &&
+                Objects.equals(city, address.city) &&
+                Objects.equals(state, address.state) &&
+                Objects.equals(zipCode, address.zipCode) &&
+                Objects.equals(longitude, address.longitude) &&
+                Objects.equals(latitude, address.latitude);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), streetName, city,
+                state, zipCode, longitude, latitude);
     }
 }
