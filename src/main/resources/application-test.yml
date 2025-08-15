@@ -1,0 +1,17 @@
+spring:
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/${com.test.database}
+    username: ${com.username}
+    password: ${com.password}
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/${com.test.database}
+    username: ${com.username}
+    password: ${com.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  flyway:
+    locations:
+      - classpath:db/migration
+      - classpath:db/testdata
+    clean-disabled: false
