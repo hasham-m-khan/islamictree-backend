@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### DATABASE PROPERTIES ###
-src/main/resources/database.properties
+src/main/resources/database.yml
