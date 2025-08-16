@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,22 +15,26 @@ class ArticleTest {
     Long ID;
     String TITLE;
     String BLURB;
-    String ARTICLE;
+    String CONTENT;
+    String SOURCE;
+    LocalDate DATE_PUBLISHED;
     byte[] IMAGE_DATA;
-    String CONTENT_TYPE;
+    String MIME_TYPE;
     Timestamp CREATED_AT;
-    Timestamp LAST_UPDATED;
+    Timestamp UPDATED_AT;
 
     @BeforeEach
     void setUp() {
         ID = 1L;
         TITLE = "Some Title";
         BLURB = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tellus.";
-        ARTICLE = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc suscipit ex vel purus iaculis, ut.";
+        SOURCE = "https://www.somesource.org/";
+        DATE_PUBLISHED = LocalDate.of(2018, 1, 1);
+        CONTENT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc suscipit ex vel purus iaculis, ut.";
         IMAGE_DATA = "some image data".getBytes();
-        CONTENT_TYPE = "image/jpeg";
+        MIME_TYPE = "image/jpeg";
         CREATED_AT = Timestamp.from(Instant.now());
-        LAST_UPDATED = Timestamp.from(Instant.now());
+        UPDATED_AT = Timestamp.from(Instant.now());
     }
 
     @Test
@@ -42,53 +47,59 @@ class ArticleTest {
         article.setId(ID);
         article.setTitle(TITLE);
         article.setBlurb(BLURB);
-        article.setArticle(ARTICLE);
+        article.setSource(SOURCE);
+        article.setDatePublished(DATE_PUBLISHED);
+        article.setContent(CONTENT);
         article.setImageData(IMAGE_DATA);
-        article.setContentType(CONTENT_TYPE);
+        article.setMimeType(MIME_TYPE);
         article.setCreatedAt(CREATED_AT);
-        article.setLastUpdated(LAST_UPDATED);
+        article.setUpdatedAt(UPDATED_AT);
 
         // Assert
         assertNotNull(article);
         assertEquals(ID, article.getId());
         assertEquals(TITLE, article.getTitle());
         assertEquals(BLURB, article.getBlurb());
-        assertEquals(ARTICLE, article.getArticle());
+        assertEquals(SOURCE, article.getSource());
+        assertEquals(DATE_PUBLISHED, article.getDatePublished());
+        assertEquals(CONTENT, article.getContent());
         assertEquals(IMAGE_DATA, article.getImageData());
-        assertEquals(CONTENT_TYPE, article.getContentType());
+        assertEquals(MIME_TYPE, article.getMimeType());
         assertEquals(CREATED_AT, article.getCreatedAt());
-        assertEquals(LAST_UPDATED, article.getLastUpdated());
+        assertEquals(UPDATED_AT, article.getUpdatedAt());
     }
 
     @Test
     @DisplayName("Test All-arguments constructor for Article")
     void testAllArgumentsConstructor() {
         // Act
-        Article article = new Article(1L, TITLE, BLURB, ARTICLE,
-                IMAGE_DATA, CONTENT_TYPE);
+        Article article = new Article(ID, TITLE, BLURB, CONTENT, SOURCE, DATE_PUBLISHED, IMAGE_DATA,
+                MIME_TYPE);
 
         // Assert
         assertNotNull(article);
         assertEquals(ID, article.getId());
         assertEquals(TITLE, article.getTitle());
         assertEquals(BLURB, article.getBlurb());
-        assertEquals(ARTICLE, article.getArticle());
+        assertEquals(SOURCE, article.getSource());
+        assertEquals(DATE_PUBLISHED, article.getDatePublished());
+        assertEquals(CONTENT, article.getContent());
         assertEquals(IMAGE_DATA, article.getImageData());
-        assertEquals(CONTENT_TYPE, article.getContentType());
-        assertNotNull(article.getCreatedAt());
-        assertNotNull(article.getLastUpdated());
+        assertEquals(MIME_TYPE, article.getMimeType());
+        assertNull(article.getCreatedAt());
+        assertNull(article.getUpdatedAt());
     }
 
     @Test
     @DisplayName("Test equals and hashcode methods for Article")
     void testEqualsAndHashcode() {
         // Arrange
-        Article article1 = new Article(1L, TITLE, BLURB, ARTICLE,
-                IMAGE_DATA, CONTENT_TYPE);
-        Article article2 = new Article(1L, TITLE, BLURB, ARTICLE,
-                IMAGE_DATA, CONTENT_TYPE);
-        Article article3 = new Article(5L, TITLE, BLURB, ARTICLE,
-                IMAGE_DATA, CONTENT_TYPE);
+        Article article1 = new Article(ID, TITLE, BLURB, CONTENT, SOURCE, DATE_PUBLISHED, IMAGE_DATA,
+                MIME_TYPE);
+        Article article2 = new Article(ID, TITLE, BLURB, CONTENT, SOURCE, DATE_PUBLISHED, IMAGE_DATA,
+                MIME_TYPE);
+        Article article3 = new Article(234L, TITLE, BLURB, CONTENT, SOURCE, DATE_PUBLISHED, IMAGE_DATA,
+                MIME_TYPE);
 
         // Assert
         assertEquals(article1, article2);
