@@ -6,10 +6,14 @@ CREATE TABLE IF NOT EXISTS articles (
     source VARCHAR(255),
     date_published DATE,
     image_data BLOB,
-    image_type VARCHAR(255),
+    mime_type VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+
+    INDEX idx_articles_title (title),
+    INDEX idx_articles_date_published (date_published),
+    FULLTEXT INDEX ft_articles_content (content)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
