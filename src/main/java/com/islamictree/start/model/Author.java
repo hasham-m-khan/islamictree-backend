@@ -1,9 +1,12 @@
 package com.islamictree.start.model;
 
 import lombok.*;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -13,29 +16,58 @@ import java.util.Objects;
 @Table(name = "authors")
 public class Author extends Person {
 
+    @Column("birth_date")
+    private LocalDate birthDate;
+
+    @Column("death_date")
+    private LocalDate deathDate;
+
+    @Column("birth_place")
+    private String birthPlace;
+
+    @Column("resting_place")
+    private String restingPlace;
+
     @Column("description")
     private String description;
 
     @Column("image_data")
     private byte[] imageData;
 
-    @Column("content_type")
+    @Column("mime_type")
     private String contentType;
 
-    public Author(String firstName, String lastName, String description,
-                  String contentType, byte[] imageData) {
-        super(firstName, lastName);
+    @Column("created_at")
+    private Timestamp createdAt;
+
+    @LastModifiedDate
+    @Column("updated_at")
+    private Timestamp updatedAt;
+
+    public Author(Long id, String firstName, String lastName, LocalDate birthDate,
+                  LocalDate deathDate, String birthPlace, String restingPlace,
+                  String description, byte[] imageData, String contentType) {
+        super(id, firstName, lastName);
+        this.birthDate = birthDate;
+        this.deathDate = deathDate;
+        this.birthPlace = birthPlace;
+        this.restingPlace = restingPlace;
         this.description = description;
-        this.contentType = contentType;
         this.imageData = imageData;
+        this.contentType = contentType;
     }
 
-    public Author(Long id, String firstName, String lastName, String description,
-                  String contentType, byte[] imageData) {
-        super(id, firstName, lastName);
+    public Author(String firstName, String lastName, LocalDate birthDate,
+                  LocalDate deathDate, String birthPlace, String restingPlace,
+                  String description, byte[] imageData, String contentType) {
+        super(firstName, lastName);
+        this.birthDate = birthDate;
+        this.deathDate = deathDate;
+        this.birthPlace = birthPlace;
+        this.restingPlace = restingPlace;
         this.description = description;
-        this.contentType = contentType;
         this.imageData = imageData;
+        this.contentType = contentType;
     }
 
     @Override

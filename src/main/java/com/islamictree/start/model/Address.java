@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Getter
@@ -44,9 +46,17 @@ public class Address extends BaseEntity {
     @Column("address_type")
     private Enum<AddressType> addressType;
 
+    @Column("created_at")
+    private Timestamp createdAt;
 
-    public Address(Long id, String street, String city, String state, String country,
-                   String zipCode, Double longitude, Double latitude, Boolean isValidated,
+    @LastModifiedDate
+    @Column("updated_at")
+    private Timestamp updatedAt;
+
+
+    public Address(Long id, String street, String city, String state,
+                   String country, String zipCode, Double longitude,
+                   Double latitude, Boolean isValidated,
                    Enum<AddressType> addressType) {
         super(id);
         this.street = street;
@@ -60,14 +70,18 @@ public class Address extends BaseEntity {
         this.addressType = addressType;
     }
 
-    public Address(Long id, String street, String city, String state, String country,
-                   String zipCode) {
-        super(id);
+    public Address(String street, String city, String state, String country,
+                   String zipCode, Double longitude, Double latitude,
+                   Boolean isValidated, Enum<AddressType> addressType) {
         this.street = street;
         this.city = city;
         this.state = state;
         this.country = country;
         this.zipCode = zipCode;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.isValidated = isValidated;
+        this.addressType = addressType;
     }
 
     @Override

@@ -3,9 +3,12 @@ package com.islamictree.start.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -14,22 +17,53 @@ import java.util.Objects;
 @Table(name="users")
 public class User extends Person {
 
+    @Column("email")
+    private String email;
+
+    @Column("password_hash")
+    private String passwordHash;
+
     @Column("telephone")
     private String phone;
 
     @Column("address_id")
     private Long addressId;
 
-    public User(String firstName, String lastName, String phone, Long addressId) {
-        super(firstName, lastName);
+    @Column("is_active")
+    private Boolean isActive;
+
+    @Column("email_verified")
+    private Boolean emailVerified;
+
+    @Column("created_at")
+    private Timestamp createdAt;
+
+    @LastModifiedDate
+    @Column("updated_at")
+    private Timestamp updatedAt;
+
+    public User(Long id, String firstName, String lastName, String email,
+                String passwordHash, String phone, Long addressId,
+                Boolean isActive, Boolean emailVerified) {
+        super(id, firstName, lastName);
+        this.email = email;
+        this.passwordHash = passwordHash;
         this.phone = phone;
         this.addressId = addressId;
+        this.isActive = isActive;
+        this.emailVerified = emailVerified;
     }
 
-    public User(Long id, String firstName, String lastName, String phone, Long addressId) {
-        super(id, firstName, lastName);
+    public User(String firstName, String lastName, String email,
+                String passwordHash, String phone, Long addressId,
+                Boolean isActive, Boolean emailVerified) {
+        super(firstName, lastName);
+        this.email = email;
+        this.passwordHash = passwordHash;
         this.phone = phone;
         this.addressId = addressId;
+        this.isActive = isActive;
+        this.emailVerified = emailVerified;
     }
 
     @Override
