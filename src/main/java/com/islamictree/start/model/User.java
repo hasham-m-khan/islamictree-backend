@@ -66,6 +66,16 @@ public class User extends Person {
         this.emailVerified = emailVerified;
     }
 
+    public User(String firstName, String lastName, String email, String passwordHash,
+                String phone, Boolean isActive, Boolean emailVerified) {
+        super(firstName, lastName);
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.phone = phone;
+        this.isActive = isActive;
+        this.emailVerified = emailVerified;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
