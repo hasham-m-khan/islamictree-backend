@@ -3,6 +3,7 @@ spring:
     url: r2dbc:mysql://localhost:3306/${com.test.database}
     username: ${com.username}
     password: ${com.password}
+    name: ${com.test.database}
 
   datasource:
     url: jdbc:mysql://localhost:3306/${com.test.database}
@@ -15,3 +16,11 @@ spring:
       - classpath:db/migration
       - classpath:db/testdata
     clean-disabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: mappings
+    mappings:
+      enabled: true
