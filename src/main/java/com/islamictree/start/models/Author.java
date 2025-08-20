@@ -1,4 +1,4 @@
-package com.islamictree.start.model;
+package com.islamictree.start.models;
 
 import lombok.*;
 import org.springframework.data.annotation.LastModifiedDate;

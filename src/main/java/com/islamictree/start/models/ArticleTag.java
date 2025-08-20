@@ -1,35 +1,37 @@
-package com.islamictree.start.model;
+package com.islamictree.start.models;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "author_article")
-public class AuthorArticle {
-
-    @Column("author_id")
-    private Long authorId;
+@Table(name = "article_tag")
+public class ArticleTag {
 
     @Column("article_id")
     private Long articleId;
+
+    @Column("tag_id")
+    private Long tagId;
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
 
-        AuthorArticle that = (AuthorArticle) o;
-        return authorId.equals(that.authorId) && articleId.equals(that.articleId);
+        ArticleTag that = (ArticleTag) o;
+        return articleId.equals(that.articleId) && tagId.equals(that.tagId);
     }
 
     @Override
     public int hashCode() {
-        int result = authorId.hashCode();
-        result = 31 * result + articleId.hashCode();
+        int result = articleId.hashCode();
+        result = 31 * result + tagId.hashCode();
         return result;
     }
 }

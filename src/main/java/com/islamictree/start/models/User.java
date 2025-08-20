@@ -1,4 +1,4 @@
-package com.islamictree.start.model;
+package com.islamictree.start.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,6 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -43,8 +42,8 @@ public class User extends Person {
     private Timestamp updatedAt;
 
     public User(Long id, String firstName, String lastName, String email,
-                String passwordHash, String phone, Long addressId,
-                Boolean isActive, Boolean emailVerified) {
+                String passwordHash, String phone, Long addressId, Boolean isActive,
+                Boolean emailVerified, Timestamp createdAt, Timestamp updatedAt) {
         super(id, firstName, lastName);
         this.email = email;
         this.passwordHash = passwordHash;
@@ -52,12 +51,14 @@ public class User extends Person {
         this.addressId = addressId;
         this.isActive = isActive;
         this.emailVerified = emailVerified;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    public User(String firstName, String lastName, String email,
+    public User(Long id, String firstName, String lastName, String email,
                 String passwordHash, String phone, Long addressId,
                 Boolean isActive, Boolean emailVerified) {
-        super(firstName, lastName);
+        super(id, firstName, lastName);
         this.email = email;
         this.passwordHash = passwordHash;
         this.phone = phone;

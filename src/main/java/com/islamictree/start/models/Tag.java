@@ -1,9 +1,10 @@
-package com.islamictree.start.model;
+package com.islamictree.start.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.Objects;
@@ -12,12 +13,13 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="occupations")
-public class Occupation extends BaseEntity {
+@Table(name="tags")
+public class Tag extends BaseEntity {
 
+    @Column("name")
     private String name;
 
-    public Occupation(Long id, String name) {
+    public Tag(Long id, String name) {
         super(id);
         this.name = name;
     }
@@ -27,8 +29,8 @@ public class Occupation extends BaseEntity {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        Occupation that = (Occupation) o;
-        return Objects.equals(name, that.name);
+        Tag tag = (Tag) o;
+        return Objects.equals(name, tag.name);
     }
 
     @Override

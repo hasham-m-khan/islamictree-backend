@@ -1,7 +1,7 @@
 package com.islamictree.start.repositories;
 
-import com.islamictree.start.model.Article;
-import com.islamictree.start.model.ArticleTag;
+import com.islamictree.start.models.Article;
+import com.islamictree.start.models.ArticleTag;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;

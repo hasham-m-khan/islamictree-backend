@@ -1,4 +1,4 @@
-package com.islamictree.start.model;
+package com.islamictree.start.models;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
