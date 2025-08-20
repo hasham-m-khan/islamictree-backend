@@ -1,6 +1,6 @@
-package com.islamictree.start.model;
+package com.islamictree.start.models;
 
-import com.islamictree.start.model.enums.AddressType;
+import com.islamictree.start.models.enums.AddressType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +34,7 @@ public class Address extends BaseEntity {
     @Column("zip_code")
     private String zipCode;
 
-        @Column("longitude")
+    @Column("longitude")
     private Double longitude;
 
     @Column("latitude")
@@ -44,7 +44,7 @@ public class Address extends BaseEntity {
     private Boolean isValidated;
 
     @Column("address_type")
-    private Enum<AddressType> addressType;
+    private AddressType addressType;
 
     @Column("created_at")
     private Timestamp createdAt;
@@ -55,9 +55,9 @@ public class Address extends BaseEntity {
 
 
     public Address(Long id, String street, String city, String state,
-                   String country, String zipCode, Double longitude,
-                   Double latitude, Boolean isValidated,
-                   Enum<AddressType> addressType) {
+                   String country, String zipCode, Double longitude, Double latitude,
+                   Boolean isValidated,  AddressType addressType,
+                   Timestamp createdAt, Timestamp updatedAt) {
         super(id);
         this.street = street;
         this.city = city;
@@ -68,11 +68,13 @@ public class Address extends BaseEntity {
         this.latitude = latitude;
         this.isValidated = isValidated;
         this.addressType = addressType;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Address(String street, String city, String state, String country,
                    String zipCode, Double longitude, Double latitude,
-                   Boolean isValidated, Enum<AddressType> addressType) {
+                   Boolean isValidated, AddressType addressType) {
         this.street = street;
         this.city = city;
         this.state = state;
@@ -114,5 +116,22 @@ public class Address extends BaseEntity {
         result = 31 * result + Objects.hashCode(isValidated);
         result = 31 * result + Objects.hashCode(addressType);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", country='" + country + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", isValidated=" + isValidated +
+                ", addressType=" + addressType +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }
