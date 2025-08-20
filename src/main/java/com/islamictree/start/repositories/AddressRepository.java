@@ -1,6 +1,6 @@
 package com.islamictree.start.repositories;
 
-import com.islamictree.start.model.Address;
+import com.islamictree.start.models.Address;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 
