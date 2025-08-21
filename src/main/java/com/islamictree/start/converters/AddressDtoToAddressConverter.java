@@ -12,6 +12,10 @@ public class AddressDtoToAddressConverter implements Converter<AddressDto, Addre
 
     @Override
     public Address convert(AddressDto source) {
+        if (source == null) {
+            return null;
+        }
+
         return new Address(
             source.getId(),
             source.getStreet(),
@@ -22,9 +26,7 @@ public class AddressDtoToAddressConverter implements Converter<AddressDto, Addre
             source.getLongitude(),
             source.getLatitude(),
             source.getIsValidated(),
-            source.getAddressType(),
-            source.getCreatedAt(),
-            source.getUpdatedAt()
+            source.getAddressType()
         );
     }
 }
