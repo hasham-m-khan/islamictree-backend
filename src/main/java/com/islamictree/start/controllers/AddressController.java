@@ -1,14 +1,15 @@
 package com.islamictree.start.controllers;
 
+import com.islamictree.start.converters.AddressDtoToAddressConverter;
 import com.islamictree.start.converters.AddressToAddressDtoConverter;
 import com.islamictree.start.dto.AddressDto;
+import com.islamictree.start.models.Address;
 import com.islamictree.start.services.AddressService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @RestController
@@ -18,10 +19,13 @@ public class AddressController {
     private final MediaType mediaType = MediaType.APPLICATION_JSON;
     private final AddressService addressService;
     private final AddressToAddressDtoConverter dtoConverter;
+    private final AddressDtoToAddressConverter addressConverter;
 
-    public AddressController(AddressService addressService, AddressToAddressDtoConverter dtoConverter) {
+    public AddressController(AddressService addressService, AddressToAddressDtoConverter dtoConverter,
+                             AddressDtoToAddressConverter addressConverter) {
         this.addressService = addressService;
         this.dtoConverter = dtoConverter;
+        this.addressConverter = addressConverter;
     }
 
     @GetMapping({"", "/"})
@@ -37,4 +41,62 @@ public class AddressController {
             }))
             .map(address -> dtoConverter.convert(address));
     }
+
+    @GetMapping("/{id}")
+    public Mono<AddressDto> getAddressById(@PathVariable Long id) {
+        log.info("Getting address with id {}", id);
+
+        return addressService.getAddressById(id)
+                .map(address -> dtoConverter.convert(address))
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.warn("No address found in database");
+                    return Mono.empty();
+                }));
+    }
+
+    @DeleteMapping("/{id}")
+    Mono<Void> deleteAddressById(@PathVariable Long id) {
+        log.info("Deleting address with id {}", id);
+
+        return addressService.deleteAddressById(id)
+            .doOnSuccess(address -> {
+                log.info("Address with id {} deleted successfully.", id);
+            })
+            .doOnError(error ->
+                log.error(
+                        "Failed to delete address with id {}: {}",
+                        id,
+                        error.getMessage()
+                )
+            );
+    }
+
+    @PostMapping({"", "/"})
+    public Mono<AddressDto> createAddress(@RequestBody AddressDto addressDto) {
+        log.info("*** Creating new address: {}", addressDto);
+
+        Address address = addressConverter.convert(addressDto);
+
+        return addressService.saveOrUpdateAddress(address)
+                .map(savedAddress -> dtoConverter.convert(savedAddress));
+    }
+
+    @PostMapping("/{id}")
+    public Mono<AddressDto> updateAddress(@PathVariable Long id,
+                                          @RequestBody AddressDto addressDto) {
+        log.info("Updating address with id: {}", id);
+        return addressService.getAddressById(id)
+            .doOnSuccess(existingAddress -> {
+                if (existingAddress == null) {
+                    log.warn("Address with id {} not found", id);
+                    return ;
+                }
+
+                addressDto.setId(existingAddress.getId());
+                addressService.saveOrUpdateAddress(
+                        addressConverter.convert(addressDto));
+            })
+            .map(savedAddress -> dtoConverter.convert(savedAddress));
+    }
+
 }
