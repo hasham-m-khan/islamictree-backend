@@ -1,9 +1,12 @@
-package com.islamictree.start.model;
+package com.islamictree.start.models;
 
-import com.islamictree.start.model.enums.AddressType;
+import com.islamictree.start.models.enums.AddressType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.sql.Timestamp;
+import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +21,9 @@ class AddressTest {
     Double LONGITUDE;
     Double LATITUDE;
     Boolean IS_VALIDATED;
-    Enum<AddressType> ADDRESS_TYPE;
+    AddressType ADDRESS_TYPE;
+    Timestamp CREATED_AT;
+    Timestamp UPDATED_AT;
 
     @BeforeEach
     void setUp() {
@@ -31,7 +36,9 @@ class AddressTest {
         LONGITUDE = -122.4321;
         LATITUDE = 41.4321;
         IS_VALIDATED = false;
-        ADDRESS_TYPE = Enum.valueOf(AddressType.class, "RESIDENTIAL");
+        ADDRESS_TYPE = AddressType.RESIDENTIAL;
+        CREATED_AT = Timestamp.from(Instant.now());
+        UPDATED_AT = Timestamp.from(Instant.now());
     }
 
     @Test
@@ -70,8 +77,8 @@ class AddressTest {
     @DisplayName("Test All-arguments constructor for Address")
     void testAllArgumentsConstructor() {
         // Arrange
-        Address address = new Address(ID, STREET, CITY, STATE, COUNTRY, ZIP_CODE,
-                LONGITUDE, LATITUDE, IS_VALIDATED, ADDRESS_TYPE);
+        Address address = new Address(ID, STREET, CITY, STATE, COUNTRY, ZIP_CODE, LONGITUDE, LATITUDE,
+                IS_VALIDATED, ADDRESS_TYPE);
 
         // Assert
         assertNotNull(address);
@@ -91,12 +98,12 @@ class AddressTest {
     @DisplayName("Test equals and hashcode methods for Address")
     void testEqualsAndHashcode() {
         // Arrange
-        Address address1 = new Address(ID, STREET, CITY, STATE, COUNTRY, ZIP_CODE,
-                LONGITUDE, LATITUDE, IS_VALIDATED, ADDRESS_TYPE);
-        Address address2 = new Address(ID, STREET, CITY, STATE, COUNTRY, ZIP_CODE,
-                LONGITUDE, LATITUDE, IS_VALIDATED, ADDRESS_TYPE);
-        Address address3 = new Address(5L, STREET, CITY, STATE, COUNTRY, ZIP_CODE,
-                LONGITUDE, LATITUDE, IS_VALIDATED, ADDRESS_TYPE);
+        Address address1 = new Address(ID, STREET, CITY, STATE, COUNTRY, ZIP_CODE, LONGITUDE, LATITUDE,
+                IS_VALIDATED, ADDRESS_TYPE);
+        Address address2 = new Address(ID, STREET, CITY, STATE, COUNTRY, ZIP_CODE, LONGITUDE, LATITUDE,
+                IS_VALIDATED, ADDRESS_TYPE);
+        Address address3 = new Address(234L, STREET, CITY, STATE, COUNTRY, ZIP_CODE, LONGITUDE, LATITUDE,
+                IS_VALIDATED, ADDRESS_TYPE);
 
         // Assert
         assertEquals(address1, address2);
