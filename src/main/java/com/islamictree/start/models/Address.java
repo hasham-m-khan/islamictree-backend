@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -46,6 +47,7 @@ public class Address extends BaseEntity {
     @Column("address_type")
     private AddressType addressType;
 
+    @CreatedDate
     @Column("created_at")
     private Timestamp createdAt;
 
@@ -56,8 +58,7 @@ public class Address extends BaseEntity {
 
     public Address(Long id, String street, String city, String state,
                    String country, String zipCode, Double longitude, Double latitude,
-                   Boolean isValidated,  AddressType addressType,
-                   Timestamp createdAt, Timestamp updatedAt) {
+                   Boolean isValidated,  AddressType addressType) {
         super(id);
         this.street = street;
         this.city = city;
@@ -68,8 +69,6 @@ public class Address extends BaseEntity {
         this.latitude = latitude;
         this.isValidated = isValidated;
         this.addressType = addressType;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public Address(String street, String city, String state, String country,
