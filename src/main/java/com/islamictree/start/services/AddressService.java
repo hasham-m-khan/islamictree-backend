@@ -22,7 +22,8 @@ public class AddressService {
     }
 
     public Mono<Address> getAddressById(Long id) {
-        return addressRepository.findById(id);
+        return addressRepository.findById(id)
+                .switchIfEmpty(Mono.error(new RuntimeException("Address not found with id: " + id)));
     }
 
     public Mono<Address> saveOrUpdateAddress(Address address) {
@@ -30,18 +31,16 @@ public class AddressService {
         log.info("*** Checking for duplicate address.");
 
         return checkForDuplicateAddress(address)
-                .doOnNext(existing -> {
+                .flatMap(existing -> {
                     log.info("*** Updating existing address: {}", existing);
                     address.setId(existing.getId());
-                    addressRepository.save(existing);
+                    return addressRepository.save(existing);
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     log.info("*** No duplicate found, proceeding to save");
-                    return Mono.empty();
+                    return addressRepository.save(address);
                 }))
-                .cast(Address.class)
-                .switchIfEmpty(addressRepository.save(address))
-                    .doOnSuccess(saved -> log.info("Successfully saved address: {}", saved))
+                .doOnSuccess(saved -> log.info("Successfully saved address: {}", saved))
                 .doOnError(error -> log.error("Error while saving or updating address: {}", error));
     }
 
@@ -74,5 +73,4 @@ public class AddressService {
                 .next()
                 .doOnSuccess(result -> log.info("Duplicate check result: {}", result));
     }
-
 }

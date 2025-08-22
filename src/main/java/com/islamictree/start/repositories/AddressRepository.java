@@ -10,5 +10,5 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface AddressRepository extends R2dbcRepository<Address, Long> {
     Flux<Address> findByStreetAndCityAndStateAndCountryAndZipCode(
-            String street, String city, String state, String country, String zipCode);
+        String street, String city, String state, String country, String zipCode);
 }
