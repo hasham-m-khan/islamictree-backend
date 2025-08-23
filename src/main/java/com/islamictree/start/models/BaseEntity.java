@@ -24,11 +24,16 @@ public class BaseEntity implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
 
         BaseEntity that = (BaseEntity) o;
+
+        if (id == null || that.id == null) {
+            return id == null && that.id == null && this == that;
+        };
+
         return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return id != null ? id.hashCode() : 0;
     }
 }
