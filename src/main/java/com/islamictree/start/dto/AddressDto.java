@@ -24,21 +24,31 @@ public class AddressDto {
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
+    public AddressDto(Long id, String street, String city, String state, String country,
+                      String zipCode) {
+        this.id = id;
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.zipCode = zipCode;
+    }
+
     @Override
     public String toString() {
         return "AddressDto{" +
-                "id=" + id +
-                ", street='" + street + '\'' +
-                ", city='" + city + '\'' +
-                ", state='" + state + '\'' +
-                ", country='" + country + '\'' +
-                ", zipCode='" + zipCode + '\'' +
-                ", Longitude=" + Longitude +
-                ", latitude=" + latitude +
-                ", isValidated=" + isValidated +
-                ", addressType=" + addressType +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+            "id=" + id +
+            ", street='" + street + '\'' +
+            ", city='" + city + '\'' +
+            ", state='" + state + '\'' +
+            ", country='" + country + '\'' +
+            ", zipCode='" + zipCode + '\'' +
+            ", Longitude=" + Longitude +
+            ", latitude=" + latitude +
+            ", isValidated=" + isValidated +
+            ", addressType=" + addressType +
+            ", createdAt=" + createdAt +
+            ", updatedAt=" + updatedAt +
+            '}';
     }
 }

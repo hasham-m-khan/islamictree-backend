@@ -85,6 +85,16 @@ public class Address extends BaseEntity {
         this.addressType = addressType;
     }
 
+    public Address(Long id, String street, String city, String state, String country,
+                   String zipCode) {
+        super(id);
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.zipCode = zipCode;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
