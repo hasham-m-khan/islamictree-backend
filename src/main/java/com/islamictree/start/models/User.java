@@ -41,23 +41,8 @@ public class User extends Person {
     @Column("updated_at")
     private Timestamp updatedAt;
 
-    public User(Long id, String firstName, String lastName, String email,
-                String passwordHash, String phone, Long addressId, Boolean isActive,
-                Boolean emailVerified, Timestamp createdAt, Timestamp updatedAt) {
-        super(id, firstName, lastName);
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.phone = phone;
-        this.addressId = addressId;
-        this.isActive = isActive;
-        this.emailVerified = emailVerified;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public User(Long id, String firstName, String lastName, String email,
-                String passwordHash, String phone, Long addressId,
-                Boolean isActive, Boolean emailVerified) {
+    public User(Long id, String firstName, String lastName, String email, String passwordHash,
+                String phone, Long addressId, Boolean isActive, Boolean emailVerified) {
         super(id, firstName, lastName);
         this.email = email;
         this.passwordHash = passwordHash;
@@ -67,8 +52,29 @@ public class User extends Person {
         this.emailVerified = emailVerified;
     }
 
-    public User(String firstName, String lastName, String email, String passwordHash,
+    public User(Long id, String firstName, String lastName, String email, String passwordHash,
                 String phone, Boolean isActive, Boolean emailVerified) {
+        super(id, firstName, lastName);
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.phone = phone;
+        this.isActive = isActive;
+        this.emailVerified = emailVerified;
+    }
+
+    public User(String firstName, String lastName, String email, String passwordHash, String phone,
+                Long addressId, Boolean isActive, Boolean emailVerified) {
+        super(firstName, lastName);
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.phone = phone;
+        this.addressId = addressId;
+        this.isActive = isActive;
+        this.emailVerified = emailVerified;
+    }
+
+    public User(String firstName, String lastName, String email, String passwordHash, String phone,
+                Boolean isActive, Boolean emailVerified) {
         super(firstName, lastName);
         this.email = email;
         this.passwordHash = passwordHash;
