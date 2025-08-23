@@ -28,7 +28,6 @@ class AddressServiceTest {
     @InjectMocks
     private AddressService addressService;
 
-
     private Address testAddress;
     private Address existingAddress;
 

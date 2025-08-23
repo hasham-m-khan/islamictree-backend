@@ -18,12 +18,22 @@ public class AddressService {
     }
 
     public Flux<Address> getAllAddresses() {
-        return addressRepository.findAll();
+        log.info("*** Getting all addresses...");
+
+        return addressRepository.findAll()
+            .doOnComplete(() -> log.info("*** Complete getting all addresses."))
+            .doOnError(error -> log.error("*** Error getting all addresses: {}", error));
     }
 
     public Mono<Address> getAddressById(Long id) {
         return addressRepository.findById(id)
-                .switchIfEmpty(Mono.error(new RuntimeException("Address not found with id: " + id)));
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.info("*** No address found with id: {}", id);
+
+                    return Mono.empty();
+                }))
+                .doOnError(error ->
+                        new RuntimeException("Error getting address with id: " + id + " {}",  error));
     }
 
     public Mono<Address> saveOrUpdateAddress(Address address) {
