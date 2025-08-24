@@ -56,13 +56,13 @@ public class UserService {
                 log.error("*** Error getting user by id: {}", error));
     }
 
-    public Mono<User> updateUser(Long id, User user) {
+    public Mono<User> updateUser(User user) {
         log.info("*** Updating user: {}", user);
 
-        return userRepository.findById(id)
+        return userRepository.findById(user.getId())
             .flatMap(existing -> userRepository.save(user))
             .switchIfEmpty(Mono.defer(() -> {
-                log.info("*** No user found with id: {}", id);
+                log.info("*** No user found with id: {}", user.getId());
 
                 return Mono.<User>error(new RuntimeException("User does not exist"));
             }))

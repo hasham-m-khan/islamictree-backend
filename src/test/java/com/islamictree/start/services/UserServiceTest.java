@@ -97,7 +97,7 @@ class UserServiceTest {
         when(userRepository.save(user)).thenReturn(Mono.just(updatedUser));
 
         // Act
-        Mono<User> result = userService.updateUser(1L, user);
+        Mono<User> result = userService.updateUser(user);
 
         // Assert
         StepVerifier.create(result)
@@ -119,7 +119,7 @@ class UserServiceTest {
         when(userRepository.findById(1L)).thenReturn(Mono.empty());
 
         // Act
-        Mono<User> result = userService.updateUser(1L, nonExistingUser);
+        Mono<User> result = userService.updateUser(nonExistingUser);
 
         // Assert
         StepVerifier.create(result)
