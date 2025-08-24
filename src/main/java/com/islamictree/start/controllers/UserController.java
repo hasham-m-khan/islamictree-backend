@@ -65,15 +65,18 @@ public class UserController {
             .doOnError(error -> log.error("Repository error: ", error));
     }
 
-    @PostMapping("/{id}")
-    public Mono<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+    @PutMapping({"", "/"})
+    public Mono<UserDto> updateUser(@RequestBody UserDto userDto) {
+        if (userDto.getId() == null) {
+            return Mono.<UserDto>error(new IllegalArgumentException("id is required"));
+        }
+
         log.info("Controller - Updating user {}", userDto);
 
         User user = userConverter.convert(userDto);
-
-        return userService.updateUser(id, user)
+        return userService.updateUser(user)
             .map(savedUser -> dtoConverter.convert(savedUser))
-            .doOnSuccess(newUser -> log.info("Controller - New user created: {}", newUser))
+            .doOnSuccess(newUser -> log.info("Controller - user updated: {}", newUser))
             .doOnError(error -> log.error("Repository error: ", error));
     }
 

@@ -197,11 +197,11 @@ class UserControllerTest {
                 true, true);
 
         when(userConverter.convert(userDto)).thenReturn(user);
-        when(userService.updateUser(anyLong(), any(User.class))).thenReturn(Mono.just(updatedInfoUser));
+        when(userService.updateUser(any(User.class))).thenReturn(Mono.just(updatedInfoUser));
         when(dtoConverter.convert(updatedInfoUser)).thenReturn(updatedInfoUserDto);
 
         // Act
-        Mono<UserDto> result = userController.updateUser(TEST_ID, userDto);
+        Mono<UserDto> result = userController.updateUser(userDto);
 
         // Assert
         StepVerifier.create(result)
@@ -213,7 +213,7 @@ class UserControllerTest {
 
         verify(userConverter, times(1)).convert(userDto);
         verify(dtoConverter, times(1)).convert(updatedInfoUser);
-        verify(userService, times(1)).updateUser(anyLong(), any(User.class));
+        verify(userService, times(1)).updateUser(any(User.class));
     }
 
     @Test
@@ -229,10 +229,10 @@ class UserControllerTest {
         RuntimeException exception = new RuntimeException("User does not exist");
 
         when(userConverter.convert(userDto)).thenReturn(user);
-        when(userService.updateUser(anyLong(), any(User.class))).thenReturn(Mono.<User>error(exception));
+        when(userService.updateUser(any(User.class))).thenReturn(Mono.<User>error(exception));
 
         // Act
-        Mono<UserDto> result = userController.updateUser(TEST_ID, userDto);
+        Mono<UserDto> result = userController.updateUser(userDto);
 
         // Assert
         StepVerifier.create(result)
@@ -240,7 +240,7 @@ class UserControllerTest {
             .verify();
 
         verify(userConverter, times(1)).convert(userDto);
-        verify(userService, times(1)).updateUser(anyLong(), any(User.class));
+        verify(userService, times(1)).updateUser(any(User.class));
         verify(dtoConverter, never()).convert(any(User.class));
     }
 
@@ -257,10 +257,10 @@ class UserControllerTest {
         RuntimeException databaseException = new RuntimeException("Database connection failed");
 
         when(userConverter.convert(userDto)).thenReturn(user);
-        when(userService.updateUser(anyLong(), any(User.class))).thenReturn(Mono.error(databaseException));
+        when(userService.updateUser(any(User.class))).thenReturn(Mono.error(databaseException));
 
         // Act
-        Mono<UserDto> result = userController.updateUser(TEST_ID, userDto);
+        Mono<UserDto> result = userController.updateUser(userDto);
 
         // Assert
         StepVerifier.create(result)
@@ -269,7 +269,7 @@ class UserControllerTest {
 
         // Verify interactions
         verify(userConverter, times(1)).convert(userDto);
-        verify(userService, times(1)).updateUser(TEST_ID, user);
+        verify(userService, times(1)).updateUser(user);
         verify(dtoConverter, never()).convert(any(User.class));
     }
 
