@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 @RequestMapping(value = "/api/v1/addresses", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AddressController {
 
-    private final MediaType mediaType = MediaType.APPLICATION_JSON;
     private final AddressService addressService;
     private final AddressToAddressDtoConverter dtoConverter;
     private final AddressDtoToAddressConverter addressConverter;
@@ -64,9 +63,9 @@ public class AddressController {
             })
             .doOnError(error ->
                 log.error(
-                        "Failed to delete address with id {}: {}",
-                        id,
-                        error.getMessage()
+                    "Failed to delete address with id {}: {}",
+                    id,
+                    error.getMessage()
                 )
             );
     }
@@ -77,26 +76,22 @@ public class AddressController {
 
         Address address = addressConverter.convert(addressDto);
 
-        return addressService.saveOrUpdateAddress(address)
-                .map(savedAddress -> dtoConverter.convert(savedAddress));
+        return addressService.saveAddress(address)
+            .map(savedAddress -> dtoConverter.convert(savedAddress));
     }
 
-    @PostMapping("/{id}")
-    public Mono<AddressDto> updateAddress(@PathVariable Long id,
-                                          @RequestBody AddressDto addressDto) {
-        log.info("Updating address with id: {}", id);
-        return addressService.getAddressById(id)
-            .doOnSuccess(existingAddress -> {
-                if (existingAddress == null) {
-                    log.warn("Address with id {} not found", id);
-                    return ;
-                }
+    @PutMapping({"", "/"})
+    public Mono<AddressDto> updateAddress(@RequestBody AddressDto addressDto) {
+        log.info("Updating address with id: {}", addressDto.getId());
 
-                addressDto.setId(existingAddress.getId());
-                addressService.saveOrUpdateAddress(
-                        addressConverter.convert(addressDto));
-            })
-            .map(savedAddress -> dtoConverter.convert(savedAddress));
+        if (addressDto.getId() == null) {
+            return Mono.<AddressDto>error(new IllegalArgumentException("id is required"));
+        }
+
+        Address address = addressConverter.convert(addressDto);
+        return addressService.updateAddress(address)
+            .map(dtoConverter::convert)
+            .doOnError(error -> log.error("Error: {}", error.getMessage()));
     }
 
 }

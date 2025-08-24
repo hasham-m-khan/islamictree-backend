@@ -95,31 +95,29 @@ class AddressServiceTest {
 
         // Act & Assert
         StepVerifier.create(addressService.getAddressById(nonExistentId))
-            .expectErrorMessage("Address not found with id: " + nonExistentId)
+            .expectErrorMessage("No address found with id: " + nonExistentId)
             .verify();
 
         verify(addressRepository, times(1)).findById(nonExistentId);
     }
 
     @Test
-    @DisplayName("Testing saveOrUpdateAddress - Should save new address when no duplicate exists")
-    void testSaveOrUpdateAddress_ShouldSaveNewAddress_WhenNoDuplicateExists() {
+    @DisplayName("Testing saveAddress - Should save new address when no duplicate exists")
+    void testSaveAddress_ShouldSaveNewAddress_WhenAddressDoesNotExist() {
         // Arrange
         Address newAddress = new Address("New Street", "New City", "CA",
                 "USA", "90210", -118.0, 34.0, false, AddressType.RESIDENTIAL);
         Address savedAddress = new Address(3L, "New Street", "New City", "CA",
                 "USA", "90210", -118.0, 34.0, false, AddressType.RESIDENTIAL);
 
-        // Mock no duplicate found
         when(addressRepository.findByStreetAndCityAndStateAndCountryAndZipCode(
                 "New Street", "New City", "CA", "USA", "90210"))
                 .thenReturn(Flux.empty());
 
-        // Mock save operation
         when(addressRepository.save(newAddress)).thenReturn(Mono.just(savedAddress));
 
         // Act
-        Mono<Address> result = addressService.saveOrUpdateAddress(newAddress);
+        Mono<Address> result = addressService.saveAddress(newAddress);
 
         // Assert
         StepVerifier.create(result)
@@ -132,37 +130,52 @@ class AddressServiceTest {
     }
 
     @Test
-    @DisplayName("Testing saveOrUpdateAddress - Should update existing address when duplicate exists")
-    void testSaveOrUpdateAddress_ShouldUpdateExistingAddress_WhenDuplicateExists() {
+    @DisplayName("Testing updateAddress - Should update existing address")
+    void testUpdateAddress_ShouldUpdateAddress_WhenAddressExists() {
         // Arrange
-        Address newAddress = new Address("123 Main St", "City 1", "NY",
-                "USA", "10001", -73.9857, 40.7484, false, AddressType.RESIDENTIAL);
+        Long ADD_ID = 5L;
+        Address updatedAddress = new Address(ADD_ID, "123 Main St", "City 3", "NY",
+                "USA", "10001", -73.9857, 40.7484, false, AddressType.BUSINESS);
 
-        Address existingDuplicate = new Address(5L, "123 Main St", "City 1", "NY",
+        Address existingAddress = new Address(ADD_ID, "123 Main St", "City 1", "NY",
                 "USA", "10001", -73.9857, 40.7484, true, AddressType.RESIDENTIAL);
 
-        // Mock duplicate found
-        when(addressRepository.findByStreetAndCityAndStateAndCountryAndZipCode(
-                "123 Main St", "City 1", "NY", "USA", "10001"))
-                .thenReturn(Flux.just(existingDuplicate));
-
-        // Mock save operation for the updated address
-        when(addressRepository.save(existingDuplicate)).thenReturn(Mono.just(existingDuplicate));
+        when(addressRepository.findById(ADD_ID)).thenReturn(Mono.just(existingAddress));
+        when(addressRepository.save(updatedAddress)).thenReturn(Mono.just(updatedAddress));
 
         // Act
-        Mono<Address> result = addressService.saveOrUpdateAddress(newAddress);
+        Mono<Address> result = addressService.updateAddress(updatedAddress);
 
         // Assert
         StepVerifier.create(result)
-                .expectNext(existingDuplicate)
+                .expectNext(updatedAddress)
                 .verifyComplete();
 
-        // Verify the new address got the existing ID
-        assertThat(newAddress.getId()).isEqualTo(5L);
+        verify(addressRepository, times(1)).findById(ADD_ID);
+        verify(addressRepository, times(1)).save(updatedAddress);
+    }
 
-        verify(addressRepository, times(1)).findByStreetAndCityAndStateAndCountryAndZipCode(
-                "123 Main St", "City 1", "NY", "USA", "10001");
-        verify(addressRepository, times(1)).save(existingDuplicate);
+    @Test
+    @DisplayName("Testing updateAddress - Should throw exception when address not found")
+    void testUpdateAddress_ShouldThrowException_WhenAddressNotFound() {
+        // Arrange
+        Long ADD_ID = 5L;
+        Address updatedAddress = new Address(ADD_ID, "123 Main St", "City 3", "NY",
+            "USA", "10001", -73.9857, 40.7484, false,
+            AddressType.BUSINESS);
+
+        when(addressRepository.findById(ADD_ID)).thenReturn(Mono.empty());
+
+        // Act
+        Mono<Address> result = addressService.updateAddress(updatedAddress);
+
+        // Assert
+        StepVerifier.create(result)
+            .expectErrorMessage("Address not found with id: " + ADD_ID)
+            .verify();
+
+        verify(addressRepository, times(1)).findById(ADD_ID);
+        verify(addressRepository, never()).save(updatedAddress);
     }
 
     @Test

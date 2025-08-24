@@ -30,21 +30,21 @@ public class AddressService {
                 .switchIfEmpty(Mono.defer(() -> {
                     log.info("*** No address found with id: {}", id);
 
-                    return Mono.empty();
+                    return Mono.<Address>error(new RuntimeException("No address found with id: " + id));
                 }))
                 .doOnError(error ->
                         new RuntimeException("Error getting address with id: " + id + " {}",  error));
     }
 
-    public Mono<Address> saveOrUpdateAddress(Address address) {
-        log.info("*** Saving or updating address: {}", address);
-        log.info("*** Checking for duplicate address.");
+    public Mono<Address> saveAddress(Address address) {
+        log.info("*** Saving address: {}", address);
+        log.info("*** Checking of address already exists");
 
         return checkForDuplicateAddress(address)
                 .flatMap(existing -> {
-                    log.info("*** Updating existing address: {}", existing);
-                    address.setId(existing.getId());
-                    return addressRepository.save(existing);
+                    log.info("*** Address already exists: {}", existing);
+
+                    return Mono.<Address>error(new RuntimeException("Address already exists"));
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     log.info("*** No duplicate found, proceeding to save");
@@ -52,6 +52,21 @@ public class AddressService {
                 }))
                 .doOnSuccess(saved -> log.info("Successfully saved address: {}", saved))
                 .doOnError(error -> log.error("Error while saving or updating address: {}", error));
+    }
+
+    public Mono<Address> updateAddress(Address address) {
+        log.info("*** Updating address: {}", address);
+
+        return addressRepository.findById(address.getId())
+            .switchIfEmpty(Mono.defer(() -> {
+                log.error("*** Address not found with id: {}", address.getId());
+
+                return Mono.<Address>error(
+                    new RuntimeException("Address not found with id: " + address.getId()));
+            }))
+            .flatMap(existing -> addressRepository.save(address))
+            .doOnSuccess(updated -> log.info("Successfully updated address: {}", updated))
+            .doOnError(error -> log.error("Error while updating address: {}", error));
     }
 
     public Mono<Void> deleteAddressById(Long id) {

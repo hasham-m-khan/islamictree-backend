@@ -23,10 +23,10 @@ import static org.mockito.Mockito.*;
 class AddressControllerTest {
 
     @InjectMocks
-    private AddressController addressController;
+    AddressController addressController;
 
     @Mock
-    private AddressService addressService;
+    AddressService addressService;
 
     @Mock
     AddressDtoToAddressConverter addressConverter;
@@ -34,8 +34,8 @@ class AddressControllerTest {
     @Mock
     AddressToAddressDtoConverter dtoConverter;
 
-    private Address testAddress;
-    private AddressDto testAddressDto;
+    Address testAddress;
+    AddressDto testAddressDto;
 
     @BeforeEach
     void setUp() {
@@ -76,20 +76,18 @@ class AddressControllerTest {
     @DisplayName("GET /addresses - Should return empty Flux when no addresses exist")
     void testGetAddressById_ShouldReturnEmptyFlux_whenNoAddressesExist() {
         // Arrange
-        Long addressId = 1L;
-        when(addressService.getAddressById(addressId)).thenReturn(Mono.just(testAddress));
-        when(dtoConverter.convert(testAddress)).thenReturn(testAddressDto);
+        Long addressId = 999L;
+        when(addressService.getAddressById(addressId)).thenReturn(Mono.empty());
 
         // Act
         Mono<AddressDto> result = addressController.getAddressById(addressId);
 
         // Assert
         StepVerifier.create(result)
-                .expectNext(testAddressDto)
-                .verifyComplete();
+            .verifyComplete();
 
         verify(addressService, times(1)).getAddressById(addressId);
-        verify(dtoConverter, times(1)).convert(testAddress);
+        verify(dtoConverter, never()).convert(any(Address.class));
     }
 
     @Test
@@ -105,8 +103,8 @@ class AddressControllerTest {
 
         // Assert
         StepVerifier.create(result)
-                .expectNext(testAddressDto)
-                .verifyComplete();
+            .expectNext(testAddressDto)
+            .verifyComplete();
 
         verify(addressService, times(1)).getAddressById(addressId);
         verify(dtoConverter, times(1)).convert(testAddress);
@@ -153,7 +151,7 @@ class AddressControllerTest {
         savedDto.setCity("New City");
 
         when(addressConverter.convert(inputDto)).thenReturn(inputAddress);
-        when(addressService.saveOrUpdateAddress(inputAddress)).thenReturn(Mono.just(savedAddress));
+        when(addressService.saveAddress(inputAddress)).thenReturn(Mono.just(savedAddress));
         when(dtoConverter.convert(savedAddress)).thenReturn(savedDto);
 
         // Act
@@ -165,7 +163,7 @@ class AddressControllerTest {
                 .verifyComplete();
 
         verify(addressConverter, times(1)).convert(inputDto);
-        verify(addressService, times(1)).saveOrUpdateAddress(inputAddress);
+        verify(addressService, times(1)).saveAddress(inputAddress);
         verify(dtoConverter, times(1)).convert(savedAddress);
     }
 
@@ -178,7 +176,7 @@ class AddressControllerTest {
         RuntimeException exception = new RuntimeException("Creation failed");
 
         when(addressConverter.convert(inputDto)).thenReturn(inputAddress);
-        when(addressService.saveOrUpdateAddress(inputAddress)).thenReturn(Mono.error(exception));
+        when(addressService.saveAddress(inputAddress)).thenReturn(Mono.error(exception));
 
         // Act
         Mono<AddressDto> result = addressController.createAddress(inputDto);
@@ -189,75 +187,96 @@ class AddressControllerTest {
                 .verify();
 
         verify(addressConverter, times(1)).convert(inputDto);
-        verify(addressService, times(1)).saveOrUpdateAddress(inputAddress);
+        verify(addressService, times(1)).saveAddress(inputAddress);
         verify(dtoConverter, never()).convert(any(Address.class));
     }
 
     @Test
-    @DisplayName("POST /addresses/{id} - Should update address when address exists")
+    @DisplayName("PUT /addresses - Should update address when address exists")
     void testUpdateAddress_ShouldUpdateAddress_WhenAddressExists() {
         // Arrange
-        Long addressId = 1L;
-        AddressDto updateDto = new AddressDto();
-        updateDto.setStreet("Updated Street");
-        updateDto.setCity("Updated City");
+        Long ADD_ID = 2L;
+        AddressDto testAddressDto = new AddressDto(ADD_ID, "42nd ST", "Manhattan",
+                "NY", "USA", "11234");
+        Address testAddress = new Address(ADD_ID, "42nd ST", "Manhattan",
+                "NY", "USA", "11234");
+        Address testUpdatedAddress = new Address(ADD_ID, "42nd ST", "Manhattan",
+                "NY", "USA", "11245");
+        AddressDto testUpdatedAddressDto = new AddressDto(ADD_ID, "42nd ST", "Manhattan",
+                "NY", "USA", "11245");
 
-        when(addressService.getAddressById(addressId)).thenReturn(Mono.just(testAddress));
-        when(dtoConverter.convert(testAddress)).thenReturn(testAddressDto);
+        when(addressConverter.convert(testAddressDto)).thenReturn(testAddress);
+        when(addressService.updateAddress(testAddress)).thenReturn(Mono.just(testUpdatedAddress));
+        when(dtoConverter.convert(testUpdatedAddress)).thenReturn(testUpdatedAddressDto);
 
         // Act
-        Mono<AddressDto> result = addressController.updateAddress(addressId, updateDto);
+        Mono<AddressDto> result = addressController.updateAddress(testAddressDto);
 
         // Assert
         StepVerifier.create(result)
-                .expectNext(testAddressDto)
-                .verifyComplete();
+            .expectNext(testUpdatedAddressDto)
+            .verifyComplete();
 
-        verify(addressService, times(1)).getAddressById(addressId);
-        verify(dtoConverter, times(1)).convert(testAddress);
+        verify(addressConverter, times(1)).convert(testAddressDto);
+        verify(dtoConverter, times(1)).convert(testUpdatedAddress);
+        verify(addressService, times(1)).updateAddress(testAddress);
     }
 
     @Test
-    @DisplayName("POST /addresses/{id} - Should handle when address not found for update")
+    @DisplayName("PUT /addresses - Should handle when address is not found")
     void testUpdateAddress_ShouldHandleNotFound_WhenAddressDoesNotExist() {
         // Arrange
-        Long addressId = 999L;
-        AddressDto updateDto = new AddressDto();
-        updateDto.setStreet("Updated Street");
+        Long ADD_ID = 999L;
+        AddressDto addressDto = new AddressDto();
+        addressDto.setId(ADD_ID);
 
-        when(addressService.getAddressById(addressId)).thenReturn(Mono.empty());
+        Address address = new Address();
+        address.setId(ADD_ID);
+
+        RuntimeException exception = new RuntimeException("Address not found");
+
+        when(addressConverter.convert(any(AddressDto.class))).thenReturn(address);
+        when(addressService.updateAddress(address)).thenReturn(Mono.error(exception));
 
         // Act
-        Mono<AddressDto> result = addressController.updateAddress(addressId, updateDto);
+        Mono<AddressDto> result = addressController.updateAddress(addressDto);
 
         // Assert
         StepVerifier.create(result)
-                .verifyComplete();
+            .expectErrorMatches(throwable ->
+                throwable instanceof RuntimeException &&
+                throwable.getMessage().equals("Address not found"))
+            .verify();
 
-        verify(addressService, times(1)).getAddressById(addressId);
+        verify(addressConverter, times(1)).convert(addressDto);
+        verify(addressService, times(1)).updateAddress(address);
         verify(dtoConverter, never()).convert(any(Address.class));
-        verify(addressConverter, never()).convert(any(AddressDto.class));
     }
 
     @Test
-    @DisplayName("POST /addresses/{id} - Should handle error during update")
+    @DisplayName("PUT /addresses/ - Should handle error during update")
     void testUpdateAddress_ShouldHandleError_WhenUpdateFails() {
         // Arrange
         Long addressId = 1L;
         AddressDto updateDto = new AddressDto();
+        updateDto.setId(addressId);
+        Address address = new Address();
+        address.setId(addressId);
+
         RuntimeException exception = new RuntimeException("Update failed");
 
-        when(addressService.getAddressById(addressId)).thenReturn(Mono.error(exception));
+        when(addressConverter.convert(updateDto)).thenReturn(address);
+        when(addressService.updateAddress(address)).thenReturn(Mono.error(exception));
 
         // Act
-        Mono<AddressDto> result = addressController.updateAddress(addressId, updateDto);
+        Mono<AddressDto> result = addressController.updateAddress(updateDto);
 
         // Assert
         StepVerifier.create(result)
-                .expectError(RuntimeException.class)
-                .verify();
+            .expectError(RuntimeException.class)
+            .verify();
 
-        verify(addressService, times(1)).getAddressById(addressId);
+        verify(addressService, times(1)).updateAddress(address);
         verify(dtoConverter, never()).convert(any(Address.class));
     }
 }
