@@ -17,25 +17,23 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Mono<User> saveOrUpdateUser(User user) {
+    public Mono<User> saveUser(User user) {
         log.info("*** Saving or updating user: {}", user);
         log.info("*** Checking for duplicate email.");
 
         return checkForDuplicateEmail(user)
             .flatMap(existing -> {
-               log.info("*** Updating existing user: {}", existing);
-
-               user.setId(existing.getId());
-               return userRepository.save(existing);
+               log.error("*** User already exists: {}", existing);
+               return Mono.<User>error(
+                   new RuntimeException("User already exists with the email: " + existing.getEmail())
+               );
             })
             .switchIfEmpty(Mono.defer(() -> {
                 log.info("*** No duplicate found. Proceeding to save user.");
                 return userRepository.save(user);
             }))
-            .doOnSuccess(saved ->
-                log.info("*** Successfully saved / updated user: {}", saved))
-            .doOnError(error ->
-                log.error("*** Error saving / updating user: {}", error));
+            .doOnSuccess(saved -> log.info("*** Successfully saved / updated user: {}", saved))
+            .doOnError(error -> log.error("*** Error saving user: {}", error));
     }
 
     public Flux<User> getAllUsers() {
@@ -56,6 +54,20 @@ public class UserService {
             }))
             .doOnError(error ->
                 log.error("*** Error getting user by id: {}", error));
+    }
+
+    public Mono<User> updateUser(Long id, User user) {
+        log.info("*** Updating user: {}", user);
+
+        return userRepository.findById(id)
+            .flatMap(existing -> userRepository.save(user))
+            .switchIfEmpty(Mono.defer(() -> {
+                log.info("*** No user found with id: {}", id);
+
+                return Mono.<User>error(new RuntimeException("User does not exist"));
+            }))
+            .doOnSuccess(updated -> log.info("*** Successfully updated user: {}", updated))
+            .doOnError(error -> log.error("*** Error updating user: ", error));
     }
 
     public Mono<Void> deleteUserById(Long id) {

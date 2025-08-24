@@ -14,7 +14,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -34,7 +33,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Testing createUser - Should create a user")
-    void testSaveOrUpdateUser_ShouldCreateUser_WhenNoDuplicateExists() {
+    void testSaveUser_ShouldCreateUser_WhenNoDuplicateExists() {
         // Arrange
         User user = new User("John", "Doe", "jdoe@xyz.com",
                 "some random hash", "111-222-3333", null,
@@ -48,7 +47,7 @@ class UserServiceTest {
         when(userRepository.save(user)).thenReturn(Mono.just(savedUser));
 
         // Act
-        Mono<User> result = userService.saveOrUpdateUser(user);
+        Mono<User> result = userService.saveUser(user);
 
         // Assert
         StepVerifier.create(result)
@@ -60,38 +59,75 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Testing createUser - Should update user when email is in DB")
-    void testSaveOrUpdateUser_ShouldUpdateUser_WhenEmailExists() {
+    @DisplayName("Testing createUser - Should throw error when user exists")
+    void testSaveUser_ShouldThrowRuntimeException_WhenUserExists() {
         // Arrange
         User existingUser = new User(1L, "John", "Doe",
                 "jdoe@xyz.com", "some random hash",
                 "111-222-3333", null, true, true);
 
-        User updateUser = new User("John", "Doe", "jdoe@xyz.com",
-                "some random hash", "245-678-9012", null,
-                true, true);
-
-        User expectedUpdatedUser = new User(1L, "John", "Doe",
-                "jdoe@xyz.com", "some random hash",
-                "245-678-9012", null, true, true);
-
-
         when(userRepository.findByEmail(existingUser.getEmail()))
                 .thenReturn(Mono.just(existingUser));
-        when(userRepository.save(existingUser))
-                .thenReturn(Mono.just(expectedUpdatedUser));
 
         // Act
-        Mono<User> result = userService.saveOrUpdateUser(updateUser);
+        Mono<User> result = userService.saveUser(existingUser);
 
         // Assert
         StepVerifier.create(result)
-                .expectNext(expectedUpdatedUser)
-                .verifyComplete();
+                .expectError(RuntimeException.class)
+                .verify();
 
         verify(userRepository, times(1))
                 .findByEmail(existingUser.getEmail());
-        verify(userRepository, times(1)).save(existingUser);
+    }
+
+    @Test
+    @DisplayName("Testing updateUser - Should update user when id found")
+    void testUpdateUser_ShouldUpdateUser_WhenIdFound() {
+        // Arrange
+        User user = new User(1L, "John", "Doe",
+                "jdoe@xyz.com", "some random hash",
+                "111-222-3333", null, true, true);
+
+        User updatedUser = new User(1L, "John", "Doe",
+                "jdoe@xyz.com", "some random hash",
+                "489-225-3876", null, true, true);
+
+        when(userRepository.findById(1L)).thenReturn(Mono.just(user));
+        when(userRepository.save(user)).thenReturn(Mono.just(updatedUser));
+
+        // Act
+        Mono<User> result = userService.updateUser(1L, user);
+
+        // Assert
+        StepVerifier.create(result)
+            .expectNext(updatedUser)
+            .verifyComplete();
+
+        verify(userRepository, times(1)).findById(1L);
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    @DisplayName("Testing updateUser - Should throw error when id not found")
+    void testUpdateUser_ShouldThrowError_WhenIdNotFound() {
+        // Arrange
+        User nonExistingUser = new User(1L, "John", "Doe",
+                "jdoe@xyz.com", "some random hash",
+                "111-222-3333", null, true, true);
+
+        when(userRepository.findById(1L)).thenReturn(Mono.empty());
+
+        // Act
+        Mono<User> result = userService.updateUser(1L, nonExistingUser);
+
+        // Assert
+        StepVerifier.create(result)
+            .expectError(RuntimeException.class)
+            .verify();
+
+        verify(userRepository, times(1))
+            .findById(anyLong());
     }
 
     @Test
