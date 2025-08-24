@@ -2,8 +2,12 @@ package com.islamictree.start.converters;
 
 import com.islamictree.start.dto.UserDto;
 import com.islamictree.start.models.User;
+import lombok.NoArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
+@NoArgsConstructor
 public class UserToUserDtoConverter implements Converter<User, UserDto> {
 
     @Override
