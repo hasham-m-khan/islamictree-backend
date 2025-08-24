@@ -82,11 +82,11 @@ public class AddressController {
 
     @PutMapping({"", "/"})
     public Mono<AddressDto> updateAddress(@RequestBody AddressDto addressDto) {
-        log.info("Updating address with id: {}", addressDto.getId());
-
         if (addressDto.getId() == null) {
             return Mono.<AddressDto>error(new IllegalArgumentException("id is required"));
         }
+
+        log.info("Updating address with id: {}", addressDto.getId());
 
         Address address = addressConverter.convert(addressDto);
         return addressService.updateAddress(address)
