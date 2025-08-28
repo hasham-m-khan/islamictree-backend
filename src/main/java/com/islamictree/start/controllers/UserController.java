@@ -45,7 +45,7 @@ public class UserController {
         log.info("Controller - Getting user by id {}", id);
 
         return userService.getUserById(id)
-            .map(user -> dtoConverter.convert(user))
+            .map(dtoConverter::convert)
             .switchIfEmpty(Mono.defer(() -> {
                 log.info("Controller - No user found in database.");
                 return Mono.empty();
