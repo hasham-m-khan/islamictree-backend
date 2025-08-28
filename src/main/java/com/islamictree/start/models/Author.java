@@ -35,7 +35,7 @@ public class Author extends Person {
     private byte[] imageData;
 
     @Column("mime_type")
-    private String contentType;
+    private String mimeType;
 
     @Column("created_at")
     private Timestamp createdAt;
@@ -46,7 +46,7 @@ public class Author extends Person {
 
     public Author(Long id, String firstName, String lastName, LocalDate birthDate,
                   LocalDate deathDate, String birthPlace, String restingPlace,
-                  String description, byte[] imageData, String contentType) {
+                  String description, byte[] imageData, String mimeType) {
         super(id, firstName, lastName);
         this.birthDate = birthDate;
         this.deathDate = deathDate;
@@ -54,12 +54,12 @@ public class Author extends Person {
         this.restingPlace = restingPlace;
         this.description = description;
         this.imageData = imageData;
-        this.contentType = contentType;
+        this.mimeType = mimeType;
     }
 
     public Author(String firstName, String lastName, LocalDate birthDate,
                   LocalDate deathDate, String birthPlace, String restingPlace,
-                  String description, byte[] imageData, String contentType) {
+                  String description, byte[] imageData, String mimeType) {
         super(firstName, lastName);
         this.birthDate = birthDate;
         this.deathDate = deathDate;
@@ -67,7 +67,7 @@ public class Author extends Person {
         this.restingPlace = restingPlace;
         this.description = description;
         this.imageData = imageData;
-        this.contentType = contentType;
+        this.mimeType = mimeType;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class Author extends Person {
         if (!super.equals(o)) return false;
 
         Author author = (Author) o;
-        return Objects.equals(description, author.description) && Arrays.equals(imageData, author.imageData) && Objects.equals(contentType, author.contentType);
+        return Objects.equals(description, author.description) && Arrays.equals(imageData, author.imageData) && Objects.equals(mimeType, author.mimeType);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class Author extends Person {
         int result = super.hashCode();
         result = 31 * result + Objects.hashCode(description);
         result = 31 * result + Arrays.hashCode(imageData);
-        result = 31 * result + Objects.hashCode(contentType);
+        result = 31 * result + Objects.hashCode(mimeType);
         return result;
     }
 }
