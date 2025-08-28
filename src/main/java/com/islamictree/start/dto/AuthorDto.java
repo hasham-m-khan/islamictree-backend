@@ -38,4 +38,19 @@ public class AuthorDto {
         this.imageData = imageData;
         this.mimeType = mimeType;
     }
+
+    public AuthorDto(Long id, String firstName, String lastName, LocalDate birthDate,
+                     LocalDate deathDate, String birthPlace, String deathPlace, String description,
+                     byte[] imageData, String mimeType) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+        this.deathDate = deathDate;
+        this.birthPlace = birthPlace;
+        this.deathPlace = deathPlace;
+        this.description = description;
+        this.imageData = imageData;
+        this.mimeType = mimeType;
+    }
 }
