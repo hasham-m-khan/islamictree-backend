@@ -52,7 +52,7 @@ class AuthorTest {
         author.setRestingPlace(DEATH_PLACE);
         author.setDescription(DESCRIPTION);
         author.setImageData(IMAGE_DATA);
-        author.setContentType(MIME_TYPE);
+        author.setMimeType(MIME_TYPE);
 
         // Assert
         assertNotNull(author);
@@ -65,7 +65,7 @@ class AuthorTest {
         assertEquals(DEATH_PLACE, author.getRestingPlace());
         assertEquals(DESCRIPTION, author.getDescription());
         assertArrayEquals(IMAGE_DATA, author.getImageData());
-        assertEquals(MIME_TYPE, author.getContentType());
+        assertEquals(MIME_TYPE, author.getMimeType());
     }
 
     @Test
@@ -87,7 +87,7 @@ class AuthorTest {
         assertEquals(DEATH_PLACE, author.getRestingPlace());
         assertEquals(DESCRIPTION, author.getDescription());
         assertArrayEquals(IMAGE_DATA, author.getImageData());
-        assertEquals(MIME_TYPE, author.getContentType());
+        assertEquals(MIME_TYPE, author.getMimeType());
     }
 
     @Test
