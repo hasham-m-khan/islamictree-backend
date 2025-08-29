@@ -90,7 +90,7 @@ class AuthorControllerTest {
         when(dtoConverter.convert(author3)).thenReturn(author3Dto);
 
         // Act
-        Flux<AuthorDto> result = authorController.getAllAuthors();
+        Flux<AuthorDto> result = authorController.getAllAuthors(false);
 
         // Assert
         StepVerifier.create(result)
@@ -110,7 +110,7 @@ class AuthorControllerTest {
         when(authorService.getAuthorById(anyLong())).thenReturn(Mono.error(exception));
 
         // Act
-        Mono<AuthorDto> result = authorController.getAuthorById(TEST_ID);
+        Mono<AuthorDto> result = authorController.getAuthorById(TEST_ID, false);
 
         // Assert
         StepVerifier.create(result)
@@ -129,7 +129,7 @@ class AuthorControllerTest {
         when(authorService.getAuthorById(anyLong())).thenReturn(Mono.empty());
 
         // Act
-        Mono<AuthorDto> result = authorController.getAuthorById(TEST_ID);
+        Mono<AuthorDto> result = authorController.getAuthorById(TEST_ID, false);
 
         // Assert
         StepVerifier.create(result)
@@ -147,7 +147,7 @@ class AuthorControllerTest {
         when(dtoConverter.convert(created)).thenReturn(returnedDto);
 
         // Act
-        Mono<AuthorDto> result = authorController.getAuthorById(TEST_ID);
+        Mono<AuthorDto> result = authorController.getAuthorById(TEST_ID, false);
 
         // Assert
         StepVerifier.create(result)
