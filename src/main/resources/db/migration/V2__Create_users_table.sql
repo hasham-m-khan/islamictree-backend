@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
 
-    CONSTRAINT chk_email_format CHECK (email REGEXP '^[A-Za-z0-9]([A-Za-z0-9._%-]*[A-Za-z0-9])?@[A-Za-z0-9]([A-Za-z0-9.-]*[A-Za-z0-9])?\\.[A-Za-z]{2,}$'),
+    ${usersEmailConstraint}
     CONSTRAINT chk_password_length CHECK (CHAR_LENGTH(password_hash) >= 8),
 
     INDEX idx_users_email (email),

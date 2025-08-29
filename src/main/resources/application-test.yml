@@ -1,26 +1,16 @@
 spring:
   r2dbc:
-    url: r2dbc:mysql://localhost:3306/${com.test.database}
-    username: ${com.username}
-    password: ${com.password}
-    name: ${com.test.database}
-
-  datasource:
-    url: jdbc:mysql://localhost:3306/${com.test.database}
-    username: ${com.username}
-    password: ${com.password}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: r2dbc:h2:mem:///testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    username: sa
+    password:
 
   flyway:
-    locations:
-      - classpath:db/migration
-      - classpath:db/testdata
-    clean-disabled: false
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: mappings
-    mappings:
-      enabled: true
+    enabled: true
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    user: sa
+    password:
+    locations: classpath:db/migration, classpath:db/test-data
+    placeholders:
+      authorsFullTextIndexes: ""
+      articlesFullTextIndexes: ""
+      usersEmailConstraint: CONSTRAINT chk_email_format CHECK (email LIKE '%@%.%'),

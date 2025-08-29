@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS articles (
     PRIMARY KEY (id),
 
     INDEX idx_articles_title (title),
-    INDEX idx_articles_date_published (date_published),
-    FULLTEXT INDEX ft_articles_content (content)
-
+    INDEX idx_articles_date_published (date_published)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+${articlesFullTextIndexes}

@@ -5,19 +5,24 @@ spring:
     active:
       - test
 
-  datasource:
-    url: jdbc:mysql://localhost:3306/${com.prod.database}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
-    username: ${com.username}
-    password: ${com.password}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
   r2dbc:
-    url: r2dbc:mysql://localhost:3306/${com.prod.database}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+    url: r2dbc:mysql://localhost:3306/${com.prod.database}
     username: ${com.username}
     password: ${com.password}
-    name: ${com.prod.database}
 
   flyway:
     enabled: true
+    url: jdbc:mysql://localhost:3306/${com.prod.database}
+    user: ${com.username}
+    password: ${com.password}
     locations: classpath:db/migration
     baseline-on-migrate: true
+    placeholders:
+      authorsFullTextIndexes: |
+        CREATE FULLTEXT INDEX idx_authors_description  
+          ON authors(description);
+        CREATE FULLTEXT INDEX idx_authors_search_all  
+          ON authors(first_name, last_name, description);
+      articlesFullTextIndexes: |
+        CREATE FULLTEXT INDEX ft_articles_content ON articles(content);
+      usersEmailConstraint: CONSTRAINT chk_email_format CHECK (email REGEXP '^[A-Za-z0-9]([A-Za-z0-9._%-]*[A-Za-z0-9])?@[A-Za-z0-9]([A-Za-z0-9.-]*[A-Za-z0-9])?\\.[A-Za-z]{2,}$'),
