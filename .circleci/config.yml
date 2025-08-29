@@ -28,8 +28,8 @@ jobs:
 
       # Run your full test suite
       - run:
-          name: Run Tests
-          command: mvn test -B
+          name: Run Tests with H2 Profile
+          command: mvn test -B -Pci-test
 
 workflows:
   version: 2
