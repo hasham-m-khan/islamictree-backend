@@ -1,0 +1,11 @@
+version: 2.1
+
+orbs:
+  maven: circleci/maven@2.0.0
+
+workflows:
+  version: 2
+  maven_test:
+    jobs:
+      - maven/test:
+          command: "verify"
