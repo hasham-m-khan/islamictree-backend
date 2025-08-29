@@ -1,2 +1,2 @@
 # islamictree-backend
-Backend for IslamicTree website
+Backend for IslamicTree website.
