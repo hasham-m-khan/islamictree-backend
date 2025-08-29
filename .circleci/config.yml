@@ -1,11 +1,44 @@
 version: 2.1
 
-orbs:
-  maven: circleci/maven@2.0.0
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/openjdk:17.0  # Use JDK 17; switch to 11 if needed
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Restore Maven cache based on pom.xml checksum
+      - restore_cache:
+          keys:
+            - m2-{{ checksum "pom.xml" }}
+            - m2-
+
+      # Download and cache dependencies without running tests
+      - run:
+          name: Resolve Maven Dependencies
+          command: mvn dependency:go-offline -B
+
+      # Save resolved dependencies to cache
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: m2-{{ checksum "pom.xml" }}
+
+      # Run your full test suite
+      - run:
+          name: Run Tests
+          command: mvn test -B
 
 workflows:
   version: 2
-  maven_test:
+  build_and_test_on_push:
+    triggers:
+      - schedule:  # optional daily build
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only: main
     jobs:
-      - maven/test:
-          command: "verify"
+      - build-and-test
