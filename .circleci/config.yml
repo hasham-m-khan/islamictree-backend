@@ -1,44 +1,38 @@
 version: 2.1
-
 jobs:
-  build-and-test:
+  test-java:
     docker:
-      - image: cimg/openjdk:17.0  # Use JDK 17; switch to 11 if needed
-    working_directory: ~/repo
-
+      - image: cimg/openjdk:23.0
     steps:
       - checkout
-
-      # Restore Maven cache based on pom.xml checksum
+      - run:
+          name: Calculate cache key
+          command: |-
+            find . -name 'pom.xml' -o -name 'gradlew*' -o -name '*.gradle*' | \
+                    sort | xargs cat > /tmp/CIRCLECI_CACHE_KEY
       - restore_cache:
-          keys:
-            - m2-{{ checksum "pom.xml" }}
-            - m2-
-
-      # Download and cache dependencies without running tests
+          key: cache-{{ checksum "/tmp/CIRCLECI_CACHE_KEY" }}
       - run:
-          name: Resolve Maven Dependencies
-          command: mvn dependency:go-offline -B
-
-      # Save resolved dependencies to cache
+          command: mvn verify
+      - store_test_results:
+          path: target/surefire-reports
       - save_cache:
+          key: cache-{{ checksum "/tmp/CIRCLECI_CACHE_KEY" }}
           paths:
-            - ~/.m2
-          key: m2-{{ checksum "pom.xml" }}
-
-      # Run your full test suite
+            - ~/.m2/repository
+  deploy:
+    # This is an example deploy job, not actually used by the workflow
+    docker:
+      - image: cimg/base:stable
+    steps:
+      # Replace this with steps to deploy to users
       - run:
-          name: Run Tests with H2 Profile
-          command: mvn test -B -Pci-test
-
+          name: deploy
+          command: '#e.g. ./deploy.sh'
 workflows:
-  version: 2
-  build_and_test_on_push:
-    triggers:
-      - schedule:  # optional daily build
-          cron: "0 0 * * *"
-          filters:
-            branches:
-              only: main
+  build-and-test:
     jobs:
-      - build-and-test
+      - test-java
+    # - deploy:
+    #     requires:
+    #       - test-java
