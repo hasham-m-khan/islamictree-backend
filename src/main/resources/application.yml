@@ -6,15 +6,15 @@ spring:
       - test
 
   r2dbc:
-    url: r2dbc:mysql://localhost:3306/islamictree
+    url: r2dbc:mysql://localhost:3306/somedb
     username: root
-    password: admin
+    password: somepassword
 
   flyway:
     enabled: true
-    url: jdbc:mysql://localhost:3306/islamictree
+    url: jdbc:mysql://localhost:3306/somedb
     user: root
-    password: admin
+    password: somepassword
     locations: classpath:db/migration
     baseline-on-migrate: true
     placeholders:
