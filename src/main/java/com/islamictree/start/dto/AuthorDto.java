@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -24,6 +25,7 @@ public class AuthorDto {
     private String mimeType;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private List<TagDto> tags;
 
     public AuthorDto(String firstName, String lastName, LocalDate birthDate, LocalDate deathDate,
                      String birthPlace, String deathPlace, String description, byte[] imageData,
@@ -52,5 +54,23 @@ public class AuthorDto {
         this.description = description;
         this.imageData = imageData;
         this.mimeType = mimeType;
+    }
+
+    public AuthorDto(Long id, String firstName, String lastName, LocalDate birthDate,
+                     LocalDate deathDate, String birthPlace, String deathPlace,
+                     String description, byte[] imageData, String mimeType, Timestamp createdAt,
+                     Timestamp updatedAt) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+        this.deathDate = deathDate;
+        this.birthPlace = birthPlace;
+        this.deathPlace = deathPlace;
+        this.description = description;
+        this.imageData = imageData;
+        this.mimeType = mimeType;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }
