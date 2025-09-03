@@ -18,8 +18,7 @@ class ArticleTest {
     String CONTENT;
     String SOURCE;
     LocalDate DATE_PUBLISHED;
-    byte[] IMAGE_DATA;
-    String MIME_TYPE;
+    String IMAGE_URL;
     Timestamp CREATED_AT;
     Timestamp UPDATED_AT;
 
@@ -31,8 +30,7 @@ class ArticleTest {
         SOURCE = "https://www.somesource.org/";
         DATE_PUBLISHED = LocalDate.of(2018, 1, 1);
         CONTENT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc suscipit ex vel purus iaculis, ut.";
-        IMAGE_DATA = "some image data".getBytes();
-        MIME_TYPE = "image/jpeg";
+        IMAGE_URL = "some image url";
         CREATED_AT = Timestamp.from(Instant.now());
         UPDATED_AT = Timestamp.from(Instant.now());
     }
@@ -50,8 +48,7 @@ class ArticleTest {
         article.setSource(SOURCE);
         article.setDatePublished(DATE_PUBLISHED);
         article.setContent(CONTENT);
-        article.setImageData(IMAGE_DATA);
-        article.setMimeType(MIME_TYPE);
+        article.setImageUrl(IMAGE_URL);
         article.setCreatedAt(CREATED_AT);
         article.setUpdatedAt(UPDATED_AT);
 
@@ -63,8 +60,7 @@ class ArticleTest {
         assertEquals(SOURCE, article.getSource());
         assertEquals(DATE_PUBLISHED, article.getDatePublished());
         assertEquals(CONTENT, article.getContent());
-        assertEquals(IMAGE_DATA, article.getImageData());
-        assertEquals(MIME_TYPE, article.getMimeType());
+        assertEquals(IMAGE_URL, article.getImageUrl());
         assertEquals(CREATED_AT, article.getCreatedAt());
         assertEquals(UPDATED_AT, article.getUpdatedAt());
     }
@@ -73,8 +69,7 @@ class ArticleTest {
     @DisplayName("Test All-arguments constructor for Article")
     void testAllArgumentsConstructor() {
         // Act
-        Article article = new Article(ID, TITLE, BLURB, CONTENT, SOURCE, DATE_PUBLISHED, IMAGE_DATA,
-                MIME_TYPE);
+        Article article = new Article(ID, TITLE, BLURB, CONTENT, SOURCE, DATE_PUBLISHED, IMAGE_URL);
 
         // Assert
         assertNotNull(article);
@@ -84,8 +79,7 @@ class ArticleTest {
         assertEquals(SOURCE, article.getSource());
         assertEquals(DATE_PUBLISHED, article.getDatePublished());
         assertEquals(CONTENT, article.getContent());
-        assertEquals(IMAGE_DATA, article.getImageData());
-        assertEquals(MIME_TYPE, article.getMimeType());
+        assertEquals(IMAGE_URL, article.getImageUrl());
         assertNull(article.getCreatedAt());
         assertNull(article.getUpdatedAt());
     }
@@ -94,12 +88,9 @@ class ArticleTest {
     @DisplayName("Test equals and hashcode methods for Article")
     void testEqualsAndHashcode() {
         // Arrange
-        Article article1 = new Article(ID, TITLE, BLURB, CONTENT, SOURCE, DATE_PUBLISHED, IMAGE_DATA,
-                MIME_TYPE);
-        Article article2 = new Article(ID, TITLE, BLURB, CONTENT, SOURCE, DATE_PUBLISHED, IMAGE_DATA,
-                MIME_TYPE);
-        Article article3 = new Article(234L, TITLE, BLURB, CONTENT, SOURCE, DATE_PUBLISHED, IMAGE_DATA,
-                MIME_TYPE);
+        Article article1 = new Article(ID, TITLE, BLURB, CONTENT, SOURCE, DATE_PUBLISHED, IMAGE_URL);
+        Article article2 = new Article(ID, TITLE, BLURB, CONTENT, SOURCE, DATE_PUBLISHED, IMAGE_URL);
+        Article article3 = new Article(234L, TITLE, BLURB, CONTENT, SOURCE, DATE_PUBLISHED, IMAGE_URL);
 
         // Assert
         assertEquals(article1, article2);

@@ -6,12 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -36,11 +38,8 @@ public class Article extends BaseEntity {
     @Column("date_published")
     private LocalDate datePublished;
 
-    @Column("image_data")
-    private byte[] imageData;
-
-    @Column("mime_type")
-    private String mimeType;
+    @Column("image_url")
+    private String imageUrl;
 
     @CreatedDate
     @Column("created_at")
@@ -50,27 +49,31 @@ public class Article extends BaseEntity {
     @Column("updated_at")
     private Timestamp updatedAt;
 
+    @Transient
+    private List<Tag> tags;
+
+    @Transient
+    private List<Author> authors;
+
     public Article(Long id, String title, String blurb, String content, String source,
-                   LocalDate datePublished, byte[] imageData, String mimeType) {
+                   LocalDate datePublished, String imageUrl) {
         super(id);
         this.title = title;
         this.blurb = blurb;
         this.content = content;
         this.source = source;
         this.datePublished = datePublished;
-        this.imageData = imageData;
-        this.mimeType = mimeType;
+        this.imageUrl = imageUrl;
     }
 
     public Article(String title, String blurb, String content, String source, LocalDate datePublished,
-                   byte[] imageData, String mimeType) {
+                   String imageUrl) {
         this.title = title;
         this.blurb = blurb;
         this.content = content;
         this.source = source;
         this.datePublished = datePublished;
-        this.imageData = imageData;
-        this.mimeType = mimeType;
+        this.imageUrl = imageUrl;
     }
 
     @Override
@@ -79,7 +82,12 @@ public class Article extends BaseEntity {
         if (!super.equals(o)) return false;
 
         Article article = (Article) o;
-        return title.equals(article.title) && Objects.equals(blurb, article.blurb) && content.equals(article.content) && Objects.equals(source, article.source) && Objects.equals(datePublished, article.datePublished) && Arrays.equals(imageData, article.imageData) && Objects.equals(mimeType, article.mimeType) && Objects.equals(createdAt, article.createdAt) && Objects.equals(updatedAt, article.updatedAt);
+        return title.equals(article.title) && Objects.equals(blurb, article.blurb) &&
+                content.equals(article.content) && Objects.equals(source, article.source) &&
+                Objects.equals(datePublished, article.datePublished) &&
+                Objects.equals(imageUrl, article.imageUrl) && Objects.equals(createdAt, article.createdAt) &&
+                Objects.equals(updatedAt, article.updatedAt) && Objects.equals(tags, article.tags) &&
+                Objects.equals(authors, article.authors);
     }
 
     @Override
@@ -90,10 +98,11 @@ public class Article extends BaseEntity {
         result = 31 * result + content.hashCode();
         result = 31 * result + Objects.hashCode(source);
         result = 31 * result + Objects.hashCode(datePublished);
-        result = 31 * result + Arrays.hashCode(imageData);
-        result = 31 * result + Objects.hashCode(mimeType);
+        result = 31 * result + Objects.hashCode(imageUrl);
         result = 31 * result + Objects.hashCode(createdAt);
         result = 31 * result + Objects.hashCode(updatedAt);
+        result = 31 * result + Objects.hashCode(tags);
+        result = 31 * result + Objects.hashCode(authors);
         return result;
     }
 }

@@ -4,8 +4,11 @@ import com.islamictree.start.models.Article;
 import com.islamictree.start.models.ArticleTag;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 @Repository
 public interface ArticleTagRepository extends R2dbcRepository<ArticleTag, Long> {
@@ -17,4 +20,7 @@ public interface ArticleTagRepository extends R2dbcRepository<ArticleTag, Long> 
             WHERE t.id = :tagId
     """)
     Flux<Article> findByTagId(Long tagId);
+
+    @Query("SELECT * FROM article_tag WHERE article_id IN (:articleIds)")
+    Flux<ArticleTag> findByArticleIdIn(List<Long> articleIds);
 }
