@@ -1,6 +1,6 @@
 # 🌿 IslamicTree Backend
 
-This is the backend service for the **IslamicTree** website — a platform dedicated to education, news, and resources. Built with scalability and clarity in mind, this backend powers the core functionalities of the IslamicTree ecosystem. The application was build with Test Driven Development (TDD).
+This is the backend service for the **IslamicTree** website — a platform dedicated to education, news, and resources. Built with scalability and clarity in mind, this backend powers the core functionalities of the IslamicTree ecosystem. The application was build using Test Driven Development (TDD).
 
 ---
 
