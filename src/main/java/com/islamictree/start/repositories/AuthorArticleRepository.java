@@ -7,6 +7,8 @@ import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 
+import java.util.List;
+
 @Repository
 public interface AuthorArticleRepository extends R2dbcRepository<AuthorArticle, Long> {
     @Query("""
@@ -16,4 +18,7 @@ public interface AuthorArticleRepository extends R2dbcRepository<AuthorArticle, 
         WHERE au.id = :authorId
     """)
     Flux<Article> findByTagId(Long authorId);
+
+    @Query("SELECT * FROM author_article WHERE article_id IN (:articleIds)")
+    Flux<AuthorArticle> findByArticleIdIn(List<Long> articleIds);
 }
